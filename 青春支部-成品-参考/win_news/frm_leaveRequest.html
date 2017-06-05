@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>title</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui-win.css" />
+        <style>
+            #main {
+                display: -webkit-flex;
+                -webkit-flex-flow: column;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                margin-top: 20px;
+                width: 100%;
+                height: 100%;
+            }
+            
+            .row-1 {
+                display: -webkit-box;
+                display: -webkit-flex;
+            }
+            
+            .row-1-1 {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                display: -webkit-box;
+                display: -webkit-flex;
+                -webkit-justify-content: flex-start;
+                -webkit-box-pack: start;
+            }
+            
+            .row-1-2 {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                display: -webkit-box;
+                display: -webkit-flex;
+                -webkit-justify-content: flex-end;
+                -webkit-box-pack: end;
+                color: #A5A5A5;
+            }
+            
+            .radio label {
+                text-align: center;
+                display: inline-block;
+            }
+            
+            .radio div {
+                height: 45px;
+                line-height: 45px;
+                width: 50%;
+                float: left;
+                text-align: center;
+            }
+            
+            .aui-list-view textarea {
+                padding: 15px;
+            }
+            
+            .aui-btn {
+                background-color: #C0392B;
+                color: #FFFFFF;
+                width: 70%;
+                font-weight: 500;
+                margin-left: 15%;
+                padding-top: 10px;
+                border-radius: 20px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="main">
+            <ul class="aui-list-view">
+                <li class="aui-list-view-cell row-1">
+                    <span class="row-1-1">请假会议</span>
+                    <span class="row-1-2" id="leave-meeting">自动生成会议名称</span>
+                </li>
+            </ul>
+            <form id="leave-form">
+                <ul class="aui-list-view">
+                <li class="aui-list-view-cell row-1">
+                    <span class="row-1-1"><span style="color:red">*</span>请假类型</span>
+                    <span class="row-1-2">请选择</span>
+                </li>
+                <li class="radio">
+                    <div>
+                        <input name="leave_type" type="radio" checked="checked" id="leave-type1" value="1" style="width:20px;height:20px" />
+                        <label for="name">
+                            <span>事假</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input name="leave_type" type="radio" id="leave-type2" value="2" style="width:20px;height:20px" />
+                        <label>
+                            <span>病假</span>
+                        </label>
+                    </div>
+                </li>
+            </ul>
+            <ul class="aui-list-view">
+                <li class="aui-list-view-cell">
+                    <span class="row-1-1"><span style="color:red">*</span>请假理由</span>
+                </li>
+                <textarea rows="5" id="leave-reason" placeholder="请输入请假理由"></textarea>
+            </ul>
+            </form>
+            <div class="aui-btn" onclick="leaveRequest();">提交</div>
+        </div>
+        </div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/global.js"></script>
+    <script type="text/javascript">
+
+        var mr;
+        var leave_meeting;
+        var leave_reason;
+        var leave_type1;
+        var leave_type2;
+        var leave_form;
+        apiready = function() {
+            mr = api.pageParam.mr;
+            leave_reason = $api.byId('leave-reason');
+            leave_type1 = $api.byId('leave-type1');
+            leave_type2 = $api.byId('leave-type2');
+            leave_form = document.forms[0];
+
+            leave_meeting = $api.byId('leave-meeting');
+
+            $api.html(leave_meeting, mr.meeting.title);
+
+
+        };
+
+        function leaveRequest() {
+
+            var leaveType = "";
+            var leaveReason = "";
+           
+            if ($api.val(leave_reason).trim() == '') {
+                api.toast({
+                    msg: '请输入请假理由'
+                });
+                return;
+            }
+
+            leaveType = getRadioBoxValue('leave_type') == 1 ? "事假" : "病假";
+            leaveReason = $api.val(leave_reason);
+
+            var userId = $api.getStorage(App.keys.userId);
+            api.ajax({
+                url : App.urls.mr + '/leave' ,
+                method : 'post',
+                data: {
+                    values: {
+                        'access_token': $api.getStorage(App.keys.accessToken),
+                        'user_id': userId,
+                        'leaveType': leaveType,
+                        'leaveReason': leaveReason,
+                        'meetingId': mr.meetingId
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.state == 0) {
+                        alert(ret.message);
+                        api.closeWin({
+                            name: 'win_leaveRequest'
+                        });
+                        api.closeFrame({
+                            name: 'frm_leaveRequest'
+                        });
+                    } else {
+                        alert("请假失败");
+                    }
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+
+        }
+
+        function getRadioBoxValue(radioName) { 
+            var obj = document.getElementsByName(radioName);  //这个是以标签的name来取控件
+                 for(i=0; i<obj.length;i++)    {
+
+                  if(obj[i].checked)    { 
+                          return   obj[i].value; 
+                  } 
+              }         
+             return "undefined";
+         }
+    </script>
+
+</html>

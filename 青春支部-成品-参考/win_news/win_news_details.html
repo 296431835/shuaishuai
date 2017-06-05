@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>title</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../fonts/iconfont.css">
+        <link rel="stylesheet" type="text/css" href="../fonts1/iconfont.css">
+        <style>
+            html,
+            body {
+                height: 100%;
+                font-family: '微软雅黑';
+                font-size: 14px;
+            }
+            
+            #wrapper {
+                /*这里大盒子设置height为100%是必须的，如果没有，header，content无法构成弹性盒子布局*/
+                height: 100%;
+                display: -webkit-flex;
+                -webkit-flex-flow: column;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+            }
+            
+            #header {
+                text-align: center;
+                overflow: hidden;
+                background-color: #b41f23;
+                height: 44px;
+                line-height: 44px;
+            }
+            
+            #header .topgroup {
+                position: relative;
+            }
+            
+            #header .topgroup .back {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 44px;
+                height: 44px;
+                line-height: 44px;
+                color: #fff;
+                font-size: 25px;
+                font-weight: bold;
+            }
+            
+            #header .topgroup .Menu {
+                color: #fff;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            
+            #content {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+            }
+            
+            #footer {
+                height: 60px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                background-color: #f9f9f9;
+            }
+            
+            #footer div {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                display: -webkit-box;
+                display: -webkit-flex;
+                -webkit-box-align: center;
+                -webkit-box-pack: center;
+                -webkit-align-items: center;
+                -webkit-justify-content: center;
+            }
+            
+            #footer div button {
+                text-align: center;
+                width: 130px;
+                height: 40px;
+                line-height: 40px;
+                border-radius: 10px;
+                font-size: 16px;
+                outline: 0;
+            }
+            
+            #footer div button span.iconfont {
+                font-size: 16px;
+                margin-right: 5px;
+            }
+            
+            #footer div button.btn1 {
+                color: #fff;
+                background-color: #ff0000;
+            }
+            
+            #footer div button.btn2 {
+                background-color: #fff;
+                color: #ff0000;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <div id="header">
+                <!-- 这里必须额外加个盒子，消除沉浸式效果的影响 -->
+                <div class="topgroup">
+                    <div class="back iconfont" onclick="api.closeWin();">&#xe600;</div>
+                    <div class="Menu">支部党员大会</div>
+                </div>
+            </div>
+            <div id="content">
+            </div>
+            <div id="footer">
+                
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/global.js"></script>
+    <script type="text/javascript" src="../script/template-web.js"></script>
+    <script type="text/html" id="template-meeting-header">
+                <div class="topgroup">
+                    <div class="back iconfont" onclick="api.closeWin();">&#xe600;</div>
+                    <div class="Menu">{{state.mr.meeting.meetingType.name}}</div>
+                </div>
+    </script>
+    
+    <script type="text/html" id="template-meeting-footer">
+                {{if state.mr.confirmed==1}}
+                    <div>
+                    <button disabled="disabled" type="button" class="btn1"><span class="iconfont">&#xe611;</span><span>已确认参会</span></button>
+                    </div>
+                    <div>
+                        <button disabled="disabled" type="button" class="btn2" onclick="open_leaveRequest();"><span class="iconfont">&#xe611;</span><span>请假</span></button>
+                    </div>
+                {{/if}}
+
+                {{if state.mr.confirmed==-1 && state.mr.leaved==-1}}
+                    <div>
+                    <button type="button" id="confirmed-btn" class="btn1" onclick="confirmJoin('{{state.mr.meetingId}}');">
+                    <span class="iconfont">&#xe611;</span><span id="confirmed-text">确认收到</span></button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn2" onclick="open_leaveRequest({{state.mr}});"><span class="iconfont">&#xe611;</span><span>请假</span></button>
+                    </div>
+                {{/if}}
+
+                {{if state.mr.confirmed==-1 && state.mr.leaved==1}}
+                    <div>
+                    <button disabled="disabled" type="button" class="btn1"><span class="iconfont">&#xe611;</span><span>确认收到</span></button>
+                    </div>
+                    {{if state.mr.leaveState==-1}}
+                        <div>
+                        <button disabled="disabled" type="button" class="btn2" onclick="open_leaveRequest();"><span class="iconfont">&#xe611;</span><span>请假被拒绝</span></button>
+                        </div>
+                    {{else if state.mr.leaveState==0}}
+                        <div>
+                        <button disabled="disabled" type="button" class="btn2" onclick="open_leaveRequest();"><span class="iconfont">&#xe611;</span><span>请假待审核</span></button>
+                        </div>
+                    {{else if state.mr.leaveState==1}}
+                        <div>
+                        <button disabled="disabled" type="button" class="btn2" onclick="open_leaveRequest();"><span class="iconfont">&#xe611;</span><span>请假成功</span></button>
+                        </div>
+                    {{/if}}
+                {{/if}}
+               <!--  <div>
+                   <button type="button" class="btn1"><span class="iconfont">&#xe611;</span><span>确认收到</span></button>
+                   </div>
+                   <div>
+                       <button type="button" class="btn2" onclick="open_leaveRequest();"><span class="iconfont">&#xe611;</span><span>请假</span></button>
+                   </div> -->
+                
+    </script>
+    <script type="text/javascript">
+        var meetingHeader;
+        var meetingFooter;
+        var meetingId;
+        var isFirst = true;
+        apiready = function() {
+
+            meetingHeader = $api.byId('header');
+            meetingFooter = $api.byId('footer');
+            header = $api.byId('header');
+            meetingId = api.pageParam.meetingId;
+            //适配iOS 7+，Android 4.4+状态栏
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                style: 'light',
+                color: '#b41f23'
+            });
+
+            fetchData(meetingId);
+            
+            // api.addEventListener({
+            //     name: 'viewdisappear'
+            // }, function(ret, err) {
+            //     api.closeWin();
+            //     api.closeFrame({
+            //         name: 'frm_news_details'
+            //     });
+            // });
+            api.addEventListener({
+                name: 'viewappear'
+            }, function(ret, err) {
+                if (isFirst) {
+                    isFirst = false;
+                    return;
+                }
+                fetchData(meetingId);
+            });
+        };
+
+        function fetchData(meetingId) {
+            fetchMeeting(meetingId, function (ret, err) {
+                if (ret) {
+                    var data = {
+                    'state': ret,
+                    'toDate': App.tool.toDate,
+                    };
+                    var htmlHeader = template('template-meeting-header', data);
+                    var htmlFooter = template('template-meeting-footer', data);
+                    $api.html(meetingHeader, htmlHeader);
+                    $api.html(meetingFooter, htmlFooter);
+
+                    api.openFrame({
+                        name: 'frm_news_details',
+                        url: './frm_news_details.html',
+                        rect: {
+                            x: 0,
+                            y: $api.byId('header').offsetHeight,
+                            w: 'auto',
+                            h: $api.byId('content').offsetHeight
+                        },
+                        pageParam: {
+                            state: ret
+                        },
+                        bounces: true,
+                reload: true,
+                        
+                        });
+
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+        function fetchMeeting(meetingId, callback) {
+            var userId = $api.getStorage(App.keys.userId);
+            api.ajax({
+                url : App.urls.mr + '/state/' + meetingId + '?user_id=' + userId,
+                method : 'get'
+            }, function(ret, err) {
+                callback(ret, err);
+            });
+        }
+
+        function confirmJoin(meetingId) {
+
+            api.confirm({
+                title: '确认参会',
+                msg: '确定参加此会议?',
+                buttons: ['确定', '取消']
+            }, function(ret, err) {
+                if (ret.buttonIndex == 1) {
+                    var userId = $api.getStorage(App.keys.userId);
+                    api.ajax({
+                        url : App.urls.mr + '/confirm/' + meetingId + '?user_id=' + userId,
+                        method : 'get'
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.state == 0) {
+                                alert(ret.message);
+                                fetchData(meetingId);
+                            } else {
+                                alert("确认参会失败");
+                            }
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+                }
+            });
+
+            
+        }
+
+        function open_leaveRequest(mr) {
+
+            api.openWin({
+                name: 'win_leaveRequest',
+                url: './win_leaveRequest.html',
+                pageParam: {
+                    mr: mr
+                }
+            });
+        }
+    </script>
+
+</html>

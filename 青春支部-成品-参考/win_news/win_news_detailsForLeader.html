@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>title</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../fonts/iconfont.css">
+        <link rel="stylesheet" type="text/css" href="../fonts1/iconfont.css">
+        <style>
+            html,
+            body {
+                height: 100%;
+                font-family: '微软雅黑';
+                font-size: 14px;
+            }
+            
+            #wrapper {
+                /*这里大盒子设置height为100%是必须的，如果没有，header，content无法构成弹性盒子布局*/
+                height: 100%;
+                display: -webkit-flex;
+                -webkit-flex-flow: column;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+            }
+            
+            #header {
+                text-align: center;
+                overflow: hidden;
+                background-color: #b41f23;
+                height: 44px;
+                line-height: 44px;
+            }
+            
+            #header .topgroup {
+                position: relative;
+            }
+            
+            #header .topgroup .back {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 44px;
+                height: 44px;
+                line-height: 44px;
+                color: #fff;
+                font-size: 25px;
+                font-weight: bold;
+            }
+            
+            #header .topgroup .Menu {
+                color: #fff;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            
+            #content {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+            }
+            
+            #footer {
+                height: 60px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                background-color: #f9f9f9;
+            }
+            
+            #footer div {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                display: -webkit-box;
+                display: -webkit-flex;
+                -webkit-box-align: center;
+                -webkit-box-pack: center;
+                -webkit-align-items: center;
+                -webkit-justify-content: center;
+            }
+            
+            #footer div button {
+                text-align: center;
+                width: 130px;
+                height: 40px;
+                line-height: 40px;
+                border-radius: 10px;
+                font-size: 16px;
+                outline: 0;
+            }
+            
+            #footer div button.btn2 {
+                color: #fff;
+                background-color: #ff0000;
+                letter-spacing: 10px;
+                text-align: center;
+            }
+            
+            #footer div span {
+                font-size: 16px;
+            }
+            
+            .count {
+                margin: 0 5px;
+                color: #ff0000;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="wrapper" id="meeting-win">
+            <div id="header">
+                
+            </div>
+            <div id="content">
+            </div>
+            <div id="footer">
+                
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/global.js"></script>
+    <script type="text/javascript" src="../script/template-web.js"></script>
+    <script type="text/html" id="template-meeting-header">
+                <div class="topgroup">
+                    <div class="back iconfont" onclick="api.closeWin();">&#xe600;</div>
+                    <div class="Menu">{{meeting.meetingType.name}}</div>
+                </div>
+    </script>
+    <script type="text/html" id="template-meeting-footer">
+        
+                <div>
+                    <span>有<span class="count">{{meeting.unConfirmedCount}}</span>位成员未确认</span>
+                </div>
+                <div>
+                    <button type="button" class="btn2" onclick="open_examine();">审 批</button>
+                </div>
+    </script>
+    <script type="text/javascript">
+
+        var meetingId;
+        var meetingHeader;
+        var meetingFooter;
+        var isFirst = true;
+        apiready = function() {
+            meetingId = api.pageParam.meetingId;
+            meetingHeader = $api.byId('header');
+            meetingFooter = $api.byId('footer');
+
+            var header = $api.byId('header');
+            //适配iOS 7+，Android 4.4+状态栏
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                style: 'light',
+                color: '#b41f23'
+            });
+
+            api.addEventListener({
+                name:'viewappear'
+            }, function(ret, err){
+
+                if (isFirst) {
+                    isFirst = false;
+                    return;
+                }
+
+                api.closeFrame({
+                    name: 'frm_news_detailsForLeader'
+                });
+                fetchData(meetingId);
+            });
+            
+            fetchData(meetingId);
+            
+        };
+
+        function fetchData(meetingId) {
+            fetchMeeting(meetingId, function (ret, err) {
+               if (ret) {
+                    var data = {
+                        'meeting': ret,
+                        'toDate': App.tool.toDate,
+                    }
+
+                    var htmlHeader = template('template-meeting-header', data);
+                    var htmlFooter = template('template-meeting-footer', data);
+                    $api.html(meetingHeader, htmlHeader);
+                    $api.html(meetingFooter, htmlFooter);
+
+                    api.openFrame({
+                        name: 'frm_news_detailsForLeader',
+                        url: './frm_news_detailsForLeader.html',
+                        rect: {
+                            x: 0,
+                            y: $api.byId('header').offsetHeight,
+                            w: 'auto',
+                            h: $api.byId('content').offsetHeight
+                        },
+                        pageParam: {
+                            meeting: ret
+                        },
+                        bounces: true
+                    });
+                } else {
+                    alert(JSON.stringify(err));
+                } 
+            });
+        }
+        function fetchMeeting(meetingId, callback) {
+            var userId = $api.getStorage(App.keys.userId);
+            api.ajax({
+                url : App.urls.meeting + '/' + meetingId + '/secretary?user_id=' + userId,
+                method : 'get'
+            }, function(ret, err) {
+                callback(ret, err);
+            });
+        }
+
+        function open_examine() {
+            api.openWin({
+                name: 'win_examine',
+                url: './win_examine.html',
+                pageParam: {
+                    meetingId: meetingId,
+                    isFirst: 1,
+                }
+            });
+        }
+    </script>
+
+</html>

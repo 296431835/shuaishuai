@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>日志</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../fonts/iconfont.css" />
+        <link rel="stylesheet" type="text/css" href="../fonts1/iconfont.css" />
+        <style>
+            html,
+            body {
+                height: 100%;
+                font-family: '微软雅黑';
+                font-size: 14px;
+            }
+            
+            .wrapper {
+                height: 100%;
+            }
+            
+            .content {
+                display: -webkit-flex;
+                display: -webkit-box;
+                padding: 10px 15px 3px;
+                border-bottom: 1px solid #ccc;
+                position: relative;
+            }
+            
+            .imgWrapper {
+                width: 20%;
+            }
+            
+            .imgWrapper .img {
+                width: 100%;
+                padding-top: 100%;
+                position: relative;
+            }
+            
+            .imgWrapper .img img {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+                border-radius: 100%;
+            }
+            
+            .text {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                margin-left: 15px;
+                padding-top: 5px;
+                position: relative;
+            }
+            
+            .text h1 {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 16px;
+            }
+            
+            .text p {
+                display: -webkit-box;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                font-size: 12px;
+                color: #888;
+                margin-top: 5px;
+            }
+            
+            .text .content_img {
+                width: 70%;
+                margin-top: 5px;
+            }
+            
+            .text .content_img img {
+                width: 100%;
+            }
+            
+            .date {
+                margin-top: 3px;
+                text-align: right;
+            }
+            
+            .date span {
+                font-size: 12px;
+                color: #888;
+            }
+            
+            .disc {
+                position: absolute;
+                right: 0;
+                top: 5px;
+                width: 10px;
+                height: 10px;
+                border-radius: 100%;
+                background-color: #ce1423;
+                display: none;
+            }
+            
+            .disc.active {
+                display: block;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="wrapper" id="journal-list">
+            
+        </div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/global.js"></script>
+    <script type="text/javascript" src="../script/template-web.js"></script>
+    <script id="template-journals" type="text/html">
+        {{each journals}}
+        <div class="content">
+                <div class="imgWrapper">
+                    <div class="img">
+                        <img src="{{$value.secretary.avator}}">
+                    </div>
+                </div>
+                <div class="text">
+                    <h1>{{$value.title}}</h1>
+                    <p>{{$value.content}}</p>
+                    <div class="content_img">
+                        <img src="../image/062231f9ezwurzi9vv2e6w.png" alt="">
+                    </div>
+                    <div class="date">
+                        <span style="margin-right: 5px;">{{toDate($value.createdAt)}}</span>
+                    </div>
+                    <div class="disc active"></div>
+                </div>
+            </div>
+        {{/each}}
+    </script>
+    <script type="text/javascript">
+
+        var typeCode;
+        var journal_list;
+        var offset = 0;
+
+        apiready = function() {
+
+            api.showProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '先喝杯茶...',
+                modal: false
+            });
+            
+            typeCode = api.pageParam.typeCode;
+            journal_list = $api.byId('journal-list');
+
+            init(typeCode);
+            //获取文章类型代码
+
+            fetchJournals(0, typeCode, function(ret, err) {
+                if (ret) {
+                    if ( ret instanceof Array) {//返回数据正常
+                        var data = {
+                            'journals' : ret,
+                            'toDate' : App.tool.toDate
+                        };
+                        var html = template('template-journals', data);
+                        $api.html(journal_list, html);
+                    }
+
+                    offset = 10;
+                } else {
+                    alert(JSON.stringify(err));
+                }
+
+                api.hideProgress();
+            });
+        };
+
+        function fetchJournals(offset, typeCode, callback) {
+            api.ajax({
+                url : App.urls.journal + '/' + offset + '/' + typeCode + '/list?user_id=' + $api.getStorage(App.keys.userId),
+                method : 'get'
+            }, function(ret, err) {
+                callback(ret, err);
+            });
+        }
+
+        function init(typeCode) {
+
+            /**
+            *下拉刷新
+            */
+            api.setRefreshHeaderInfo({
+                loadingImg : 'imagePath',
+                bgColor : '#ccc',
+                textColor : '#fff',
+                textDown : '下拉刷新...',
+                textUp : '松开刷新...'
+            }, function(ret, err) {
+                fetchJournals(0, typeCode, function(ret, err) {
+                    if (ret) {
+                        if ( ret instanceof Array) {//返回数据正常
+                            var data = {
+                                'journals' : ret,
+                                'toDate': App.tool.toDate
+                            };
+
+                            var html = template('template-journals', data);
+                            $api.html(journal_list, html);
+                            api.toast({
+                                msg: '刷新成功！'
+                            });
+                        }
+                        offset = 10;
+                    } else {
+                        api.toast({
+                            msg: '刷新失败！'
+                        });
+                        alert(JSON.stringify(err));
+                    }
+                api.refreshHeaderLoadDone();
+                });
+            });
+
+            /**
+            *上拉加载
+            */
+
+            api.addEventListener({
+                name:'scrolltobottom',
+                extra:{
+                    threshold:0
+                }
+            }, function(ret, err){
+                api.showProgress({
+                    title: '努力加载中...',
+                    text: '先喝杯茶...',
+                    modal: true
+                });
+                fetchJournals(offset, typeCode, function(ret, err) {
+                    if (ret) {
+                        if ( ret instanceof Array) {//返回数据正常
+
+                            if (ret.length < 10) {
+                                api.hideProgress();
+                                api.toast({
+                                    msg: '已经到底了！'
+                                });
+                                return;
+                            }
+
+                            var data = {
+                                'journals' : ret,
+                                'toDate': App.tool.toDate
+                            };
+
+                            var html = template('template-journals', data);
+                            $api.html(journal_list, $api.html(journal_list) + html);
+
+                            api.toast({
+                                msg: '加载成功！'
+                            });
+                        }
+                        offset += 10;
+                    } else {
+                        api.toast({
+                            msg: '加载失败！'
+                        });
+                        alert(JSON.stringify(err));
+                    }
+                api.hideProgress();
+                });
+            });
+
+        }
+
+        function openContentWin(journalId) {
+            api.openWin({
+                name : 'win_journal',
+                url : 'win_journal.html',
+                pageParam : {
+                    journalId : journalId
+                }
+            });
+        }
+    </script>
+
+</html>

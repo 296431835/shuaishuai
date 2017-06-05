@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>title</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui-win.css" />
+        <link rel="stylesheet" type="text/css" href="../fonts/iconfont.css" />
+        <style>
+            .aui-content {
+                padding-top: 20px;
+                padding-left: 5px;
+            }
+            
+            .name {
+                color: #ff0000;
+                text-decoration: underline;
+            }
+            
+            .metting {
+                color: #ff0000;
+            }
+            
+            .footline_1 {
+                color: #ffbb71;
+            }
+            
+            .footline_2 {
+                color: #ff0000;
+            }
+            
+            .footline_3 {
+                color: #26AD30;
+            }
+        </style>
+    </head>
+
+    <body id="leave-list">
+        
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/global.js"></script>
+    <script type="text/javascript" src="../script/template-web.js"></script>
+    <script type="text/html" id="template-leaves">
+        {{set time_line = 0}}
+        {{each leaves}}
+            {{if toDatePoint($value.leaveTime)!=time_line}}
+                {{if time_line != 0}}
+                    </ul>
+                        </div>
+                {{/if}}
+                <%time_line = toDatePoint($value.leaveTime)%>
+                
+                <div class="aui-content">
+                    <ul class="aui-timeline">
+                        <li class="aui-time-label">
+                            <span class="aui-bg-info"> {{time_line}} </span>
+                        </li>
+                        {{if $value.leaveState == 0}}
+                            <li>
+                                <i class="aui-iconfont aui-bg-info aui-icon-home "></i>
+                                <div class="aui-timeline-item" onclick="openContentWin(0, {{$value}});">
+                                    <span class="aui-timeline-time"><i class="aui-iconfont aui-icon-time"></i> {{toTime($value.leaveTime)}}</span>
+                                    <h3 class="aui-timeline-header"><span class="name">{{$value.user.name}}</span> 的假条</h3>
+                                    <div class="aui-timeline-body">
+                                        请假会议：<span class="metting">{{$value.meeting.title}}</span>
+                                    </div>
+                                    <div class="aui-timeline-footer  footline_1">
+                                        <i class="iconfont">&#xe613;</i><span>待审批。</span>
+                                    </div>
+                                </div>
+                            </li>
+                        {{else if $value.leaveState == 1}}
+                            <li>
+                                <i class="aui-iconfont aui-icon-home aui-bg-warning"></i>
+                                <div class="aui-timeline-item" onclick="openContentWin(1, {{$value}});">
+                                    <span class="aui-timeline-time"><i class="aui-iconfont aui-icon-time"></i> {{toTime($value.leaveTime)}}</span>
+                                    <h3 class="aui-timeline-header"><span class="name">{{$value.user.name}}</span> 的假条</h3>
+                                    <div class="aui-timeline-body">
+                                        请假会议：<span class="metting">{{$value.meeting.title}}</span>
+                                    </div>
+                                    <div class="aui-timeline-footer footline_3">
+                                        <i class="iconfont">&#xe605;</i><span>完成审批(同意)</span>
+                                    </div>
+                                </div>
+                            </li>
+                        {{else if $value.leaveState == -1}}
+                            <li>
+                                <i class="aui-iconfont aui-bg-info aui-icon-home"></i>
+                                <div class="aui-timeline-item" onclick="openContentWin(-1, {{$value}});">
+                                    <span class="aui-timeline-time"><i class="aui-iconfont aui-icon-time"></i> {{toTime($value.leaveTime)}}</span>
+                                    <h3 class="aui-timeline-header"><span class="name">{{$value.user.name}}</span> 的假条</h3>
+                                    <div class="aui-timeline-body">
+                                        请假会议：<span class="metting">{{$value.meeting.title}}</span>
+                                    </div>
+                                    <div class="aui-timeline-footer footline_2">
+                                        <i class="iconfont">&#xe604;</i><span>完成审批(拒绝)</span>
+                                    </div>
+                                </div>
+                            </li>
+                        {{/if}}
+            {{else}}
+                        {{if $value.leaveState == 0}}
+                            <li>
+                                <i class="aui-iconfont aui-bg-info aui-icon-home "></i>
+                                <div class="aui-timeline-item" onclick="openContentWin(0, {{$value}});">
+                                    <span class="aui-timeline-time"><i class="aui-iconfont aui-icon-time"></i> {{toTime($value.leaveTime)}}</span>
+                                    <h3 class="aui-timeline-header"><span class="name">{{$value.user.name}}</span> 的假条</h3>
+                                    <div class="aui-timeline-body">
+                                        请假会议：<span class="metting">{{$value.meeting.title}}</span>
+                                    </div>
+                                    <div class="aui-timeline-footer  footline_1">
+                                        <i class="iconfont">&#xe613;</i><span>待审批。</span>
+                                    </div>
+                                </div>
+                            </li>
+                        {{else if $value.leaveState == 1}}
+                            <li>
+                                <i class="aui-iconfont aui-icon-home aui-bg-warning"></i>
+                                <div class="aui-timeline-item" onclick="openContentWin(1, {{$value}});">
+                                    <span class="aui-timeline-time"><i class="aui-iconfont aui-icon-time"></i> {{toTime($value.leaveTime)}}</span>
+                                    <h3 class="aui-timeline-header"><span class="name">{{$value.user.name}}</span> 的假条</h3>
+                                    <div class="aui-timeline-body">
+                                        请假会议：<span class="metting">{{$value.meeting.title}}</span>
+                                    </div>
+                                    <div class="aui-timeline-footer footline_3">
+                                        <i class="iconfont">&#xe605;</i><span>完成审批(同意)</span>
+                                    </div>
+                                </div>
+                            </li>
+                        {{else if $value.leaveState == -1}}
+                            <li>
+                                <i class="aui-iconfont aui-bg-info aui-icon-home"></i>
+                                <div class="aui-timeline-item" onclick="openContentWin(-1, {{$value}});">
+                                    <span class="aui-timeline-time"><i class="aui-iconfont aui-icon-time"></i> {{toTime($value.leaveTime)}}</span>
+                                    <h3 class="aui-timeline-header"><span class="name">{{$value.user.name}}</span> 的假条</h3>
+                                    <div class="aui-timeline-body">
+                                        请假会议：<span class="metting">{{$value.meeting.title}}</span>
+                                    </div>
+                                    <div class="aui-timeline-footer footline_2">
+                                        <i class="iconfont">&#xe604;</i><span>完成审批(拒绝)</span>
+                                    </div>
+                                </div>
+                            </li>
+                        {{/if}}
+            {{/if}}
+        {{/each}}
+        </ul>
+            </div>
+    </script>
+    <script type="text/javascript">
+
+        var meetingId;
+        var leave_list;
+        var userId;
+        apiready = function() {
+            meetingId = api.pageParam.meetingId;
+            leave_list = $api.byId('leave-list');
+            userId = $api.getStorage(App.keys.userId);
+
+            fetchLeaves(meetingId, function (ret, err) {
+                var data = {
+                    'leaves': ret,
+                    'toDate': App.tool.toDate,
+                    'toDatePoint': App.tool.toDatePoint,
+                    'toTime': App.tool.toTime,
+                };
+                var html = template('template-leaves', data);
+                $api.html(leave_list, html);
+            });
+        };
+
+        function fetchLeaves(meetingId, callback) {
+            api.ajax({
+                url : App.urls.mr + '/leaves/' + meetingId + '?user_id=' + userId,
+                method : 'get'
+            }, function(ret, err) {
+                callback(ret, err);
+            });
+        }
+
+        function openContentWin(leaveState, mr) {
+            var wins = [
+                {'name':'win_leaveTreatment', 'url':'./win_leaveTreatment.html'},
+                {'name':'win_leaveTreatResult1', 'url':'./win_leaveTreatResult1.html'},
+                {'name':'win_leaveTreatResult2', 'url':'./win_leaveTreatResult2.html'},
+            ];
+
+            var name;
+            var url;
+
+            switch(leaveState) {
+                case 0:
+                    name = wins[0].name;
+                    url = wins[0].url;
+                    break;
+                case -1:
+                    name = wins[2].name;
+                    url = wins[2].url;
+                    break;
+                case 1:
+                    name = wins[1].name;
+                    url = wins[1].url;
+                    break;
+                default:
+                    break;
+            }
+            api.openWin({
+                name: name,
+                url: url,
+                pageParam: {
+                    mr: mr
+                }
+            });
+        }
+    </script>
+
+</html>

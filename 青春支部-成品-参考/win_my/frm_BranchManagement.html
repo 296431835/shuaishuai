@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>title</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui-win.css" />
+        <link rel="stylesheet" type="text/css" href="../fonts/iconfont.css">
+        <link rel="stylesheet" type="text/css" href="../fonts1/iconfont.css">
+        <style>
+            #main {
+                width: 100%;
+                height: 100%;
+                display: -webkit-flex;
+                -webkit-flex-flow: column;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+            }
+            
+            #con {
+                height: 30px;
+                line-height: 30px;
+            }
+            
+            .list {
+                width: 100%;
+                display: -webkit-flex;
+                -webkit-flex-flow: column;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+            }
+            
+            .aui-img-body span.iconfont {
+                color: #55a2d4;
+            }
+            
+            .aui-img-body p span {
+                width: 50% !important;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="main">
+            
+        </div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/global.js"></script>
+    <script type="text/javascript" src="../script/template-web.js"></script>
+    <script type="text/html" id="template-users">
+        <div id="con" style="margin: 2%">
+                成员(<span>{{users.length}}</span>人)
+            </div>
+            <div class="aui-content list">
+                <ul class="aui-user-view">
+                    {{each users}}
+                        <li class="aui-user-view-cell aui-img" onclick="openManageMyInformation('{{$value.id}}', '{{$value.isSec}}', '{{$value.isGrop}}', '{{$value.isCom}}');">
+                            <img class="aui-img-object aui-pull-left" src="{{$value.avator}}">
+                            <div class="aui-img-body">
+                                <span>{{$value.name}}
+                                    {{if $value.isSec == 'true'}}
+                                        <em style="padding:3px 5px;background: #1eb9f2;color: #FFFFFF;border-radius: 4px">书记</em>
+                                    {{else if $value.isGC == 'true'}}
+                                        <em style="padding:3px 5px;background: #64d9a3;color: #FFFFFF;border-radius: 4px">组长</em>
+                                        &nbsp;
+                                        &nbsp;
+                                        <em style="padding:3px 5px;background: #fec72e;color: #FFFFFF;border-radius: 4px">支委</em>
+                                    {{else if $value.isGrop == 'true'}}
+                                        <em style="padding:3px 5px;background: #64d9a3;color: #FFFFFF;border-radius: 4px">组长</em>
+                                    {{else if $value.isCom == 'true'}}
+                                        <em style="padding:3px 5px;background: #fec72e;color: #FFFFFF;border-radius: 4px">支委</em>
+                                    {{/if}}
+                                </span>
+                                <p class="aui-ellipsis-1" tapmode="">
+                                    <span>{{$value.tel}}</span><a href="tel:{{$value.tel}}"><span class="iconfont">&#xe601;</span></a>
+                                </p>
+                            </div>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+    </script>
+    <script type="text/javascript">
+
+        var isFirst = true;
+        var user_list;
+        apiready = function() {
+
+            user_list = $api.byId('main');
+
+            api.addEventListener({
+                name: 'viewappear'
+            }, function(ret, err) {
+                if(isFirst) {
+                    isFirst = false;
+                    return;
+                }
+
+                fetchData();
+
+            });
+            fetchData();
+            
+        };
+
+
+        function fetchData() {
+            api.ajax({
+                url: App.urls.user + '/all',
+                method: 'get',
+                data: {
+                    values: { 
+                        user_id: $api.getStorage(App.keys.userId),
+                    },
+                    files: { 
+                        fileName: 'filePath'
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret instanceof Array) {
+
+                        var users = new Array();
+                        //书记
+                        for (var i = 0; i < ret.length; i++) {
+                            var roles = ret[i].roles;
+                            for (var j = 0; j < roles.length; j++) {
+                                if (roles[j].name == 'secretary') {
+                                    ret[i].isSec = 'true';
+                                    users.push(ret[i]);
+                                    ret.splice(i, 1);
+                                    break;
+                                }
+                            }
+                        }
+
+                        //组长兼组委
+                        for (var i = 0; i < ret.length; i++) {
+
+                            var flag_com = false;
+                            var flag_grop = false;
+
+                            var roles = ret[i].roles;
+
+                            for (var j = 0; j < roles.length; j++) {
+                                if (roles[j].name == 'group_leader') 
+                                    flag_grop = true;
+                                if (roles[j].name == 'commissioner') 
+                                    flag_com = true;
+                            }
+
+                            if (flag_com && flag_grop) {
+                                ret[i].isGC = 'true';
+                                ret[i].isGrop = 'true';
+                                ret[i].isCom = 'true';
+                                users.push(ret[i]);
+                                ret.splice(i, 1);
+
+                            }
+                        }
+
+                        //组长
+                        for (var i = 0; i < ret.length; i++) {
+
+                            var flag_com = false;
+                            var flag_grop = false;
+
+                            var roles = ret[i].roles;
+                            
+                            for (var j = 0; j < roles.length; j++) {
+
+
+                                if (roles[j].name == 'group_leader'){
+                                    ret[i].isGrop = 'true';
+                                    flag_grop = true;
+                                }
+
+                                if (roles[j].name == 'commissioner'){
+                                    flag_com = true;
+                                }
+
+                                if (flag_grop && !flag_com) {
+                                    users.push(ret[i]);
+                                    ret.splice(i, 1);
+
+                                }
+                            }
+                        }
+
+                        //组委
+                        for (var i = 0; i < ret.length; i++) {
+
+                            var flag_com = false;
+                            var flag_grop = false;
+                            var roles = ret[i].roles;
+
+                            for (var j = 0; j < roles.length; j++) {
+
+                                if (roles[j].name == 'commissioner'){
+                                    ret[i].isCom = 'true';
+                                    flag_com = true;
+                                }
+
+                                if (roles[j].name == 'group_leader'){
+                                    flag_grop = true;
+                                }
+
+                                if (flag_com && !flag_grop) {
+                                    users.push(ret[i]);
+                                    ret.splice(i, 1);
+
+                                }
+                            }
+                        }
+
+                        //其他成员
+                        for (var i = 0; i < ret.length; i++) {
+
+                            var flag_com = false;
+                            var flag_grop = false;
+                            var flag_sec = false;
+
+                            var roles = ret[i].roles;
+
+                            for (var j = 0; j < roles.length; j++) {
+                                if (roles[j].name == 'commissioner')
+                                    flag_com = true;
+                                else if (roles[j].name == 'secretary') 
+                                    flag_sec = true;
+                                else if (roles[j].name == 'group_leader')
+                                    flag_grop = true;
+                            }
+
+                            if (!flag_com && !flag_grop && !flag_sec) 
+                                users.push(ret[i]);
+                                    ret.splice(i, 1);
+                            
+                        }
+
+
+                        var data = {
+                            users: users,
+                            toDate: App.tool.toDate,
+                        };
+
+                        var html = template('template-users', data);
+                        $api.html(user_list, html);
+                    }
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+        function openManageMyInformation(userId, isSec, isGrop, isCom) {
+            api.openWin({
+                name: 'ManageMyInformation',
+                url: './win_ManageMyInformation.html',
+                pageParam: {
+                    userId: userId,
+                    isSec: isSec,
+                    isGrop: isGrop,
+                    isCom: isCom,
+                }
+            });
+
+        }
+    </script>
+
+</html>
