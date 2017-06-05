@@ -1,0 +1,388 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>支部工作</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../fonts/iconfont.css">
+        <link rel="stylesheet" type="text/css" href="../fonts1/iconfont.css">
+        <style>
+            html,
+            body {
+                height: 100%;
+                font-family: '微软雅黑';
+                font-size: 14px;
+                background-color: #f9f9f9;
+            }
+            
+            #header {
+                text-align: center;
+                overflow: hidden;
+                background-color: #b41f23;
+                height: 44px;
+                line-height: 44px;
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                z-index: 999;
+            }
+            
+            #header .topgroup {
+                position: relative;
+            }
+            
+            #header .topgroup .back {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 44px;
+                height: 44px;
+                line-height: 44px;
+                color: #fff;
+                font-size: 25px;
+                font-weight: bold;
+                text-align: center;
+            }
+            
+            #header .topgroup .Menu {
+                color: #fff;
+                font-size: 18px;
+                font-weight: bold;
+            }
+            
+            #header .topgroup .top_left {
+                position: absolute;
+                left: 44px;
+                top: 0;
+                font-size: 18px;
+                font-weight: bold;
+                color: #fff;
+            }
+            
+            #header .topgroup .top_right {
+                position: absolute;
+                right: 10px;
+                top: 0;
+                font-size: 18px;
+                font-weight: bold;
+                color: #fff;
+            }
+            
+            .edit_log {
+                background-color: #b31f23;
+                margin-bottom: 20px;
+            }
+            
+            .main {
+                width: 90%;
+                padding-top: 88px;
+                margin-left: 5%;
+                margin-bottom: 50px;
+            }
+            
+            .addpic {
+                height: 250px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                -webkit-justify-content: center;
+                -webkit-box-pack: center;
+                -webkit-align-items: center;
+                -webkit-box-align: center;
+                font-size: 16px;
+                width: 90%;
+                margin-left: 5%;
+                position: relative;
+                color: #a4a4a4;
+                /*margin-top: 64px;*/
+            }
+            
+            .addpic img {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+            }
+            
+            .content {
+                width: 100%;
+            }
+            
+            .title {
+                padding-top: 5%;
+            }
+            
+            .text {
+                background-color: #fff;
+            }
+            /* .textarea {
+                overflow-y: visible;
+                padding-left: 5%;
+            }*/
+            
+            input {
+                width: 100%;
+                padding: 10px 15px;
+                margin-bottom: 15px;
+                line-height: 21px;
+                background-color: #fff;
+                border-radius: 3px;
+                outline: none;
+                box-sizing: border-box;
+            }
+            
+            textarea {
+                width: 100%;
+                padding: 10px 15px;
+                line-height: 21px;
+                background-color: #fff;
+                border-radius: 3px;
+                outline: none;
+                box-sizing: border-box;
+            }
+            
+            .text_img {
+                width: 100px;
+                height: 100px;
+                float: left;
+                margin-right: 5px;
+            }
+            
+            .text_img img {
+                width: 100%;
+                height: 100%;
+            }
+            
+            .addImage {
+                float: left;
+                width: 100px;
+                height: 100px;
+                background-color: #eee;
+                color: #a4a4a4;
+                text-align: center;
+                line-height: 100px;
+            }
+            
+            .picker {
+                padding: 15px 10px;
+                background-color: #fff;
+                margin-top: 15px;
+            }
+            
+            .picker .left {
+                float: left;
+            }
+            
+            .picker .right {
+                float: right;
+                color: #a4a4a4;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="wrapper">
+            <div id="header">
+                <!-- 这里必须额外加个盒子，消除沉浸式效果的影响 -->
+                <div class="topgroup">
+                    <div class="back iconfont" onclick="api.closeWin();">&#xe600;</div>
+                    <div class="top_right" onclick="api.closeWin();">完成</div>
+                    <div class="Menu">日志编辑</div>
+                </div>
+            </div>
+            <div class="main">
+                <div class="addpic" id="addPic" tapmode="" onclick="addPicture();">
+                    <span class="iconfont">&#xe60b;</span>&nbsp;&nbsp;<span>添加封面</span>
+                    <img src="" alt="" id="img">
+                </div>
+                <div class="content">
+                    <div class="title">
+                        <input type="text" placeholder="标题" style="border: none;" />
+                    </div>
+                    <div class="text">
+                        <textarea class="textarea" placeholder="正文" rows="8"></textarea>
+                        <!--  <div class="text_img">
+                            <img src="../image/laoxuezhang.jpg" alt="">
+                        </div> -->
+                        <div class="addImage" id="addImage" onclick="addImage();">
+                            <span class="iconfont">&#xe60b;</span>&nbsp;<span>添加图片</span>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="picker" onclick="typePicker(this);">
+                        <div class="left">
+                            类型
+                        </div>
+                        <div class="right">
+                            <span class="Text"></span><span class="iconfont">&#xe619;</span>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="picker" onclick="powerPicker(this);">
+                        <div class="left">
+                            权限选择
+                        </div>
+                        <div class="right">
+                            <span class="Text"></span><span class="iconfont">&#xe619;</span>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            var header = $api.byId('header');
+            //适配iOS 7+，Android 4.4+状态栏
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                style: 'light',
+                color: '#b41f23'
+            });
+
+            api.addEventListener({
+                name: 'viewdisappear'
+            }, function(ret, err) {
+                api.closeWin();
+
+            });
+
+        };
+
+
+        //添加图片
+        function addImage() {
+            api.getPicture({
+                sourceType: 'library',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                destinationType: 'url',
+                allowEdit: true,
+                quality: 50,
+
+                saveToPhotoAlbum: false
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.data) { //当用户选了图片之后才添加
+                        var addImage = $api.byId('addImage');
+                        var html = '<div class="text_img" onclick="replaceImage(this);"><img src="' + ret.data + '" alt=""></div>'; //字符串拼接
+                        $api.before(addImage, html);
+                        // var img = $api.byId('img');
+                        // img.setAttribute('src', ret.data);
+                    }
+
+                }
+            });
+        }
+        //更改图片
+        function replaceImage(obj) {
+
+
+
+            api.getPicture({
+                sourceType: 'library',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                destinationType: 'url',
+                allowEdit: true,
+                quality: 50,
+
+                saveToPhotoAlbum: false
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.data) { //当用户选了图片之后才更换
+                        var image = obj.getElementsByTagName('img')[0];
+                        image.setAttribute('src', ret.data);
+                    }
+
+                }
+            });
+
+        }
+        //更改封面
+        function addPicture() {
+
+            api.getPicture({
+                sourceType: 'library',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                destinationType: 'url',
+                allowEdit: true,
+                quality: 50,
+
+                saveToPhotoAlbum: false
+            }, function(ret, err) {
+                if (ret) {
+
+                    var img = $api.byId('img');
+                    img.setAttribute('src', ret.data);
+                }
+            });
+        }
+
+        function typePicker(obj) {
+            api.actionSheet({
+                title: '选择日志类型：',
+                cancelTitle: '这里是取消按钮',
+                // destructiveTitle: '红色警告按钮',
+                buttons: ['支部党员大会', '支部党委会', '党小组会', '党课', '组织生活']
+            }, function(ret, err) {
+                var index = ret.buttonIndex;
+                var Text = obj.getElementsByClassName('Text')[0];
+                if (index == 1) {
+
+                    $api.html(Text, '支部党员大会');
+
+                } else if (index == 2) {
+                    $api.html(Text, '支部党委会');
+                } else if (index == 3) {
+                    $api.html(Text, '党小组会');
+
+                } else if (index == 4) {
+                    $api.html(Text, '党课');
+
+                } else if (index == 5) {
+                    $api.html(Text, '组织生活');
+
+                }
+            });
+        }
+
+        function powerPicker(obj) {
+            api.actionSheet({
+                title: '权限选择',
+                cancelTitle: '这里是取消按钮',
+                // destructiveTitle: '红色警告按钮',
+                buttons: ['权限1', '权限2', '权限3', '权限4', '权限5']
+            }, function(ret, err) {
+                var index = ret.buttonIndex;
+                var Text = obj.getElementsByClassName('Text')[0];
+                if (index == 1) {
+
+                    $api.html(Text, '权限1');
+
+                } else if (index == 2) {
+                    $api.html(Text, '权限2');
+                } else if (index == 3) {
+                    $api.html(Text, '权限3');
+
+                } else if (index == 4) {
+                    $api.html(Text, '权限4');
+
+                } else if (index == 5) {
+                    $api.html(Text, '权限5');
+
+                }
+            });
+        }
+    </script>
+
+</html>

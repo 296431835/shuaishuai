@@ -1,0 +1,339 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>支部工作</title>
+        <link rel="stylesheet" type="text/css" href="./css/api.css" />
+        <link rel="stylesheet" type="text/css" href="./fonts/iconfont.css">
+        <link rel="stylesheet" type="text/css" href="./fonts1/iconfont.css">
+        <style>
+            html,
+            body {
+                height: 100%;
+                font-family: '微软雅黑';
+                font-size: 16px;
+            }
+            
+            #header {
+                overflow: hidden;
+                z-index: 999;
+                background-color: #b41f23;
+                height: 44px;
+                line-height: 44px;
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            
+            #header .topgroup {
+                position: relative;
+            }
+            
+            #header .topgroup .back {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 44px;
+                height: 44px;
+                line-height: 44px;
+                color: #fff;
+                font-size: 25px;
+                font-weight: bold;
+                text-align: center;
+            }
+            
+            #header .topgroup .right {
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 44px;
+                height: 44px;
+                line-height: 44px;
+                color: #fff;
+                font-size: 16px;
+                font-weight: bold;
+                text-align: center;
+            }
+            
+            #header .topgroup .Menu {
+                color: #fff;
+                font-size: 18px;
+                font-weight: bold;
+                text-align: center;
+            }
+            
+            #main {
+                padding-top: 90px;
+                background-color: #ededed;
+                padding-bottom: 50px;
+            }
+            
+            #main ul li {
+                padding: 15px 10px;
+                background-color: #fff;
+                margin-bottom: 1px;
+                display: -webkit-box;
+                display: -webkit-flex;
+                height: 35px;
+            }
+            
+            #main ul li .left {
+                width: 100px;
+                height: 35px;
+                line-height: 35px;
+                text-align: left;
+            }
+            
+            #main ul li .right {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                height: 35px;
+            }
+            
+            #main ul li .right input {
+                height: 35px;
+                width: 100%;
+                outline: 0;
+            }
+            
+            #main ul li .right select {
+                display: block;
+                appearance: none;
+                -webkit-appearance: none;
+                height: 35px;
+                outline: 0;
+                width: 100px;
+                font-size: 14px;
+                background: url("./image/arrow.png") no-repeat right center;
+                padding-left: 10px;
+                padding-right: 14px;
+                border-radius: 5px;
+                border: 0;
+                font-size: 16px;
+            }
+            
+            #main ul li.touxiang {
+                line-height: 100px;
+                height: 100px;
+            }
+            
+            #main ul li.touxiang .left {
+                line-height: 100px;
+                height: 100px;
+            }
+            
+            #main ul li.touxiang .right {
+                width: 100px;
+                height: 100px;
+            }
+            
+            #main ul li.touxiang .right img {
+                width: 100%;
+                height: 100%;
+            }
+            
+            .imgWrapper {
+                position: relative;
+                width: 100px;
+                height: 100px;
+                text-align: center;
+                line-height: 100px;
+                float: right;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                color: #a4a4a4;
+                font-size: 14px;
+            }
+            
+            #img {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="wrapper">
+            <div id="header">
+                <!-- 这里必须额外加个盒子，消除沉浸式效果的影响 -->
+                <div class="topgroup">
+                    <div class="back iconfont" onclick="api.closeWin();">&#xe600;</div>
+                    <div class="right">提交</div>
+                    <div class="Menu">完善信息</div>
+                </div>
+            </div>
+            <div id="main">
+                <form action="">
+                    <ul>
+                        <li class="touxiang">
+                            <div class="left">头像</div>
+                            <div class="right">
+                                <div class="imgWrapper" onclick="addImage();">
+                                    <span>+添加头像</span>
+                                    <img src="" alt="" id="img">
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">姓名:</div>
+                            <div class="right">
+                                <input type="text">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">身份证号</div>
+                            <div class="right">
+                                <input type="text">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">用户类型</div>
+                            <div class="right">
+                                <select name="" id="">
+                                    <option value="看书">教师</option>
+                                    <option selected="selected">学生</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li style="height: 75px;">
+                            <div class="left" style="line-height: 75px;height: 75px;">所在城市</div>
+                            <div class="right" style="height: 75px;">
+                                <select name="" id="" style="margin-bottom: 10px;">
+                                    <option value="看书">教师</option>
+                                    <option selected="selected">学生</option>
+                                </select>
+                                <select name="" id="">
+                                    <option value="看书">教师</option>
+                                    <option selected="selected">学生</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">所在高校</div>
+                            <div class="right">
+                                <select name="" id="">
+                                    <option value="看书">教师</option>
+                                    <option selected="selected">学生</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">办公电话</div>
+                            <div class="right">
+                                <input type="text">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">绑定手机</div>
+                            <div class="right">
+                                <input type="text">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="left">绑定邮箱</div>
+                            <div class="right">
+                                <input type="text">
+                            </div>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <!-- <div id="main">
+                <ul class="aui-list-view aui-in">
+                    <li class="aui-list-view-cell pe-infor" onclick="openHeadPicker();">
+                        <span class="row-1">头像</span>
+                        <span class="row-2">
+                        <div class="pe-infor-photo">
+                            <div class="pe-infor-img pe-infor row-2">
+                                <img src="../image/touxiang17.png" />
+                            </div>
+                        </div> 
+                    </span>
+                    </li>
+                    <li class="aui-list-view-cell pe-infor">
+                        <span class="row-1">昵称</span>
+                        <span class="row-2">奋斗丶</span>
+                    </li>
+                    <li class="aui-list-view-cell pe-infor">
+                        <span class="row-1">账号</span>
+                        <span class="row-2">296431835@qq.com</span>
+                    </li>
+                    <li class="aui-list-view-cell pe-infor" onclick="call();">
+                        <span class="row-1">手机号</span>
+                        <span class="row-2" id="number">18235112030</span>
+                    </li>
+                </ul>
+                <ul class="aui-list-view aui-in">
+                    <li class="aui-list-view-cell pe-infor">
+                        <span class="row-1">姓名</span>
+                        <span class="row-2">刘英帅</span>
+                    </li>
+                    <li class="aui-list-view-cell pe-infor">
+                        <span class="row-1">性别</span>
+                        <span class="row-2">男</span>
+                    </li>
+                    <li class="aui-list-view-cell pe-infor">
+                        <span class="row-1">地区</span>
+                        <span class="row-2">山西</span>
+                    </li>
+                    <li class="aui-list-view-cell pe-infor">
+                        <span class="row-1">个性签名</span>
+                        <span class="row-2">性格决定人生，态度决定成就。</span>
+                    </li>
+                </ul>
+            </div> -->
+        </div>
+    </body>
+    <script type="text/javascript" src="./script/api.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+
+
+            var header = $api.byId('header');
+            //适配iOS 7+，Android 4.4+状态栏
+            $api.fixStatusBar(header);
+            api.setStatusBarStyle({
+                style: 'light',
+                color: '#b41f23'
+            });
+            api.addEventListener({
+                name: 'viewdisappear'
+            }, function(ret, err) {
+                api.closeWin();
+
+            });
+
+
+
+        };
+
+        function addImage() {
+
+            api.getPicture({
+                sourceType: 'library',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                destinationType: 'url',
+                allowEdit: true,
+                quality: 50,
+
+                saveToPhotoAlbum: false
+            }, function(ret, err) {
+                if (ret) {
+
+                    var img = $api.byId('img');
+                    img.setAttribute('src', ret.data);
+
+                }
+            });
+        }
+    </script>
+
+</html>

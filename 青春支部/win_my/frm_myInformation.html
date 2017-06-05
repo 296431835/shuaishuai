@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>title</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui-win.css" />
+        <style>
+            #main {
+                display: -webkit-flex;
+                -webkit-flex-flow: column;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                padding-top: 30px;
+                background-color: #ededed;
+                height: 100%;
+            }
+            
+            .pe-infor {
+                display: -webkit-box;
+                display: -webkit-flex;
+                -webkit-align-items: center;
+                -webkit-box-align: center;
+            }
+            
+            .row-1 {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                display: -webkit-box;
+                display: -webkit-flex;
+                -webkit-justify-content: flex-start;
+                -webkit-box-pack: start;
+            }
+            
+            .row-2 {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                display: -webkit-box;
+                display: -webkit-flex;
+                -webkit-justify-content: flex-end;
+                -webkit-box-pack: end;
+            }
+            
+            .pe-infor-photo {
+                position: relative;
+                width: 50%;
+                height: 0;
+                padding-top: 50%;
+                border-radius: 50%;
+            }
+            
+            .pe-infor-img {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+            }
+            
+            .pe-infor-img img {
+                width: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="main">
+            <ul class="aui-list-view aui-in">
+                <li class="aui-list-view-cell pe-infor" onclick="openHeadPicker();">
+                    <span class="row-1">头像</span>
+                    <span class="row-2">
+                        <div class="pe-infor-photo">
+                            <div class="pe-infor-img pe-infor row-2">
+                                <img id="avator" />
+                            </div>
+                        </div> 
+                    </span>
+                </li>
+                <li class="aui-list-view-cell pe-infor">
+                    <span class="row-1">姓名</span>
+                    <span class="row-2" id="name"></span>
+                </li>
+                <li class="aui-list-view-cell pe-infor">
+                    <span class="row-1">账号</span>
+                    <span class="row-2" id="account"></span>
+                </li>
+                <li class="aui-list-view-cell pe-infor" onclick="call();">
+                    <span class="row-1">手机号</span>
+                    <span class="row-2" id="number"></span>
+                </li>
+            </ul>
+            <ul class="aui-list-view aui-in">
+                <li class="aui-list-view-cell pe-infor">
+                    <span class="row-1">地区</span>
+                    <span class="row-2" id="province"></span>
+                </li>
+                <li class="aui-list-view-cell pe-infor">
+                    <span class="row-1">所在党支部</span>
+                    <span class="row-2" id="branch"></span>
+                </li>
+            </ul>
+        </div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            var access_token = $api.getStorage('access_token_local');
+            var user_id = $api.getStorage('user_id_local');
+            api.ajax({ //请求用户信息
+                url: $api.getStorage('url_local') + '/user/selfinfo?access_token=' + access_token + '&user_id=' + user_id,
+                method: 'get',
+
+            }, function(ret, err) {
+                if (ret && ret.userId == $api.getStorage('user_id_local')) {
+                    alert('获取用户信息成功');
+
+                    $api.attr($api.byId('avator'), 'src', ret.avator);
+                    $api.html($api.byId('name'), ret.name);
+                    $api.html($api.byId('account'), $api.getStorage('account_local'));
+                    $api.html($api.byId('number'), ret.tel);
+                    $api.html($api.byId('province'), ret.province);
+                    $api.html($api.byId('branch'), ret.branch.name);
+                    $api.setStorage('avator_local', ret.avator);
+                    $api.setStorage('name_local', ret.name);
+                    $api.setStorage('tel_local', ret.tel);
+                    $api.setStorage('province_local', ret.province);
+                    $api.setStorage('branch_name_local', ret.branch.name);
+
+
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+
+        };
+
+        function call() {
+            api.call({
+                type: 'tel_prompt',
+                number: $api.html($api.byId('number'))
+            });
+        }
+
+        function openHeadPicker() {
+            api.actionSheet({
+                title: '请选择',
+                destructiveTitle: '修改头像',
+                cancelTitle: '取消',
+
+                buttons: ['恢复默认头像']
+            }, function(ret, err) {
+                var index = ret.buttonIndex;
+
+            });
+        }
+    </script>
+
+</html>
