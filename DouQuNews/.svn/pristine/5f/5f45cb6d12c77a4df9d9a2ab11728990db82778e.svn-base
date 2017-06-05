@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/cover.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #f0f0f0;
+        }
+
+        .h10 {
+            height: 10px;
+            background: #f4f5f6;
+            border-top: 1px solid #e8e8e8;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .h1 {
+            height: 1px;
+            margin-left: 15px;
+            background: #f0f0f0;
+        }
+
+        .fr {
+            float: right;
+        }
+
+        .hint {
+            color: #666;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .firstblock,
+        .secondblock,
+        .thirdblock {
+            background-color: #fff;
+        }
+
+        .login {
+            position: relative;
+        }
+
+        .login .text {
+            width: 100px;
+            height: 28px;
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            margin-left: -50px;
+            background-image: url(../image/my/lg.png);
+            background-repeat: no-repeat;
+            background-size: 100px 24px;
+            background-position: center center;
+        }
+        /*设置登录后的头像样式*/
+
+        #user {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+/*
+        #user .qqLogin {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            margin-top: -90px;
+        }*/
+
+        #user .userIcon {
+            height: 150px;
+            width: 150px;
+            margin: 0 auto;
+        }
+
+        #user .userIcon img {
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        #user .userName {
+            height: 30px;
+            width: 100%;
+            margin-top: 5px;
+            line-height: 30px;
+            font-size: 25px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .loginbg {
+            width: 100%;
+        }
+
+        .logins {
+            width: 100%;
+            height: 35%;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            box-sizing: border-box;
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+
+        .login_pic {
+            height: 100%;
+            width: 25%;
+            float: left;
+            background-size: 80%;
+            background-position: center top;
+            background-repeat: no-repeat;
+        }
+        #img{
+            display: none;
+            /*background-color: #000;*/
+            width:80px;
+            height: 80px;
+            position: absolute;
+            border-radius: 50%;
+            top:50%;
+            left:50%;
+            margin-top: -40px;
+            margin-left: -40px;
+
+        }
+
+        #username{
+            display: none;
+            width: 100px;
+            height: 28px;
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            margin-left: -50px;
+            text-align: center;
+            color: #fff;
+            font-weight: bold;
+
+        }
+
+        .logins .tel {
+            background-image: url(../image/my/tel.png);
+        }
+
+        .logins .wx {
+            background-image: url(../image/my/wx.png);
+        }
+
+        .logins .qq {
+            background-image: url(../image/my/qq.png);
+        }
+
+        .logins .wb {
+            background-image: url(../image/my/wb.png);
+        }
+        .logins .head{
+            background-image: url(../image/my/wb.png);
+        }
+
+        .my_content {
+            height: 64px;
+            display: flex;
+            display: -webkit-flex;
+            display: -webkit-box;
+            flex-flow: row;
+            -webkit-flex-flow: row;
+            -webkit-box-orient: horizontal;
+            background-color: #fff;
+        }
+
+        .cont {
+            flex: 1;
+            -webkit-flex: 1;
+            -webkit-box-flex: 1;
+            height: 64px;
+            box-sizing: border-box;
+            padding-bottom: 10px;
+            padding-top: 42px;
+            color: #505050;
+            font-size: 10px;
+            text-align: center;
+            background-position: center 9px;
+            background-repeat: no-repeat;
+        }
+
+        .my_content .collect {
+            border-right: 1px solid #e8e8e8;
+            background-size: 23px 22px;
+            background-image: url(../image/my/collect.png);
+        }
+
+        .my_content .huyan {
+            border-right: 1px solid #e8e8e8;
+            background-size: 30px 30px;
+            background-image: url(../image/my/eye1.png);
+        }
+
+        .my_content .common {
+            border-right: 1px solid #e8e8e8;
+            background-size: 30px 30px;
+            background-image: url(../image/my/eye.png);
+        }
+
+        .my_content .set {
+            background-size: 23px 23px;
+            background-image: url(../image/my/set.png);
+        }
+
+        .person_arrow {
+            position: absolute;
+            height: 20px;
+            right: 10px;
+            top: 90px;
+        }
+
+        .item {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 15px;
+            background-color: #fff;
+        }
+
+        .item_arrow {
+            float: right;
+            width: 6px;
+            padding: 17px 15px 15px 0;
+        }
+
+        .item-hov {
+            background-color: #E8E8E8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login">
+        <img src="../image/my/my_bg.png" class="loginbg">
+        <div id="user">
+            <div class="logins" id="logins">
+                <div class="login_pic tel open-win" win="login_mobile"></div>
+                <div class="login_pic wx"></div>
+                <div class="login_pic qq" tapmode onclick="qqLogin()"></div>
+                <div class="login_pic wb" ></div>
+            </div>
+            <div class="text open-win" win="login_choose" id="login_choose"></div>
+
+        </div>
+        <!-- <div class="logined"> -->
+        <img src="" alt="" id="img">
+        <div class="username" id="username"></div>
+        <!-- </div> -->
+        
+    </div>
+    <div class="my_content">
+        <div class="cont collect">收藏</div>
+        <div class="cont" id="mode_el" onclick="swithmode();">护眼</div>
+        <div class="cont set open-win" win="setting">设置</div>
+    </div>
+    <div class="h10"></div>
+    <div class="firstblock">
+        <div class="item" tapmode="item-hov">
+            好友动态
+            <img src="../image/my/arrow.png" class="item_arrow">
+        </div>
+    </div>
+    <div class="h10"></div>
+    <div class="secondblock">
+        <div class="item" tapmode="item-hov">
+            通知
+            <img src="../image/my/arrow.png" class="item_arrow">
+        </div>
+        <div class="h1"></div>
+        <div class="item open-win" win="offline">
+            离线
+            <img src="../image/my/arrow.png" class="item_arrow">
+        </div>
+        <div class="h1"></div>
+        <div class="item" tapmode="item-hov">
+            活动
+            <img src="../image/my/arrow.png" class="item_arrow">
+        </div>
+        <div class="h1"></div>
+        <div class="item" tapmode="item-hov">
+            商城 <em <link style="font-size:10px; color:#999;">特卖，电影</em>
+            <img src="../image/my/arrow.png" class="item_arrow">
+        </div>
+        <div class="h1"></div>
+        <div class="item" tapmode="item-hov">
+            我要爆料
+            <img src="../image/my/arrow.png" class="item_arrow">
+        </div>
+        <div class="h1"></div>
+        <div class="item" tapmode="item-hov" onclick="qqLogout()">
+            退出登录
+            <img src="../image/my/arrow.png" class="item_arrow">
+        </div>
+        <div id="show"></div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/cover.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        init();
+    }
+    var qq;
+    var logins_el;
+    var choose_el;
+    var img_el;
+    var username_el;
+    var zeroTime;
+    var host;
+    var mode_el;
+    var mdoe;
+    function init(){
+        qq = api.require('qq');
+        logins_el = $api.byId('logins');
+        choose_el = $api.byId('login_choose');
+        img_el =$api.byId('img');
+        username_el  =$api.byId('username');
+        mode_el = $api.byId('mode_el');;
+        host = $api.getStorage('host');
+        //获取储存的0点时间
+        zeroTime = $api.getStorage('zeroTime');
+        mode = $api.getStorage('mode');
+        if (mode == 'huyan') {
+            mode_el.innerHTML = '普通';
+            $api.addCls(mode_el, 'common');
+        }
+        else {
+            mode_el.innerHTML = '护眼';
+            $api.addCls(mode_el, 'huyan');
+        }
+        isLogined();
+    }
+
+
+    function isLogined(){ 
+        now = new Date().getTime();
+        if(now<=zeroTime){
+            qqLoginFromStorage();
+        }
+    }
+
+    function qqLoginFromStorage(){
+        nickname = $api.getStorage('nickname');
+        imgSrc = $api.getStorage('imgSrc');
+
+        //赋值：
+        $api.attr(img_el, 'src', imgSrc);
+        username_el.innerHTML = nickname;
+        //样式改变：  
+         $api.css(logins_el, 'display:none');
+         $api.css(choose_el, 'display:none');
+         $api.css(img_el, 'display:block');
+         $api.css(username_el, 'display:block');
+
+    }
+
+    function qqLogin(){
+        qq.login(function(ret, err) {
+            if(ret.status){
+                var openId = ret.openId;
+                qq.getUserInfo(function(ret, err) {
+                    if (ret.status) {
+                       $api.attr(img_el, 'src', ret.info.figureurl_qq_2);
+                       username_el.innerHTML = ret.info.nickname;
+                       //样式改变：
+                       
+                        $api.css(logins_el, 'display:none');
+                        $api.css(choose_el, 'display:none');
+                        $api.css(img_el, 'display:block');
+                        $api.css(username_el, 'display:block');
+
+                        //储存信息：
+                       zeroTime =  getZero();
+                       $api.setStorage('zeroTime', zeroTime);
+                       $api.setStorage('imgSrc', ret.info.figureurl_qq_2);
+                       $api.setStorage('nickname', ret.info.nickname);
+
+                    //注册：
+                    register(openId,ret.info.nickname);
+
+                    } 
+                });
+            }
+           
+
+        });
+    }
+
+
+    function register(openId,name){
+        api.ajax({
+            url: host+'news/regByQQ/',
+            method: 'post',
+            data: {
+                values: { 
+                    openId: openId,
+                    name:name
+                }
+            }
+        },function(ret, err){
+            if (ret) {
+                $api.setStorage('id', ret.id);
+            }
+        });
+    }
+
+
+    function qqLogout(){
+        qq.logout(function(ret, err) {
+            if (ret.status) {
+                $api.css(logins_el, 'display:block');
+                $api.css(choose_el, 'display:block');
+                $api.css(img_el, 'display:none');
+                $api.css(username_el, 'display:none');
+                //清除信息：
+                $api.rmStorage('zeroTime');
+                $api.rmStorage('imgSrc');
+                $api.rmStorage('username');
+                $api.rmStorage('id');
+            } 
+        });
+    }
+
+
+
+    function getZero(){
+        today  = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        zeroTime = today.getTime()+3600*1000*24;
+        return zeroTime;
+    }
+
+    var mode = $api.getStorage('mode');
+    function swithmode() {
+        var scr = mode + '();';
+        if (mode == 'common') {
+            mode = 'huyan';
+            scr = 'huyan();';
+            mode_el.innerHTML = '普通';
+            $api.removeCls(mode_el, 'huyan');
+            $api.addCls(mode_el, 'common');
+        } else {
+            mode = 'common'
+            scr = 'common();';
+            mode_el.innerHTML = '护眼'
+            $api.removeCls(mode_el, 'common');
+            $api.addCls(mode_el, 'huyan');
+        }
+
+        frms = ['video', 'theme', 'my', 
+        'home_frame_0', 'home_frame_1', 'home_frame_2',
+         'home_frame_3', 'home_frame_4'];
+        
+        try {
+            for (var i in frms) {
+                api.execScript({
+                name: 'main',
+                frameName: frms[i],
+                script: scr
+            });
+            }
+            api.execScript({
+                name: 'main',
+                script: scr
+            });
+
+            api.execScript({
+                name: 'fabu',
+                script: scr
+            });
+        } catch (err) {}
+    }
+</script>
+
+</html>

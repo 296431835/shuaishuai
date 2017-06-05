@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <style>
+        html,body{
+            background-color: transparent;
+            font-family: 微软雅黑;
+        }
+        div{
+        	width: 100px;
+        	height: 25px;
+        	text-align: center;
+        	line-height: 25px;
+        	background-color: #000;
+        	border-radius: 25px;
+        	position: absolute;
+        	top:20px;
+        	right:10px;
+        	color: #fff;
+        	font-size: 15px;
+
+        }
+    </style>
+</head>
+<body>
+    <div onclick="skip()" id="sec"></div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.setFullScreen({
+            fullScreen: true
+        });
+        api.addEventListener({
+            name: 'viewdisappear'
+        }, function(ret, err){
+           api.closeWin();
+        });
+        countDown();
+
+    };
+
+    function countDown() {
+        var time = 10;
+        var sec = $api.byId('sec');
+        var inv = setInterval(function() {
+            if (time <= 0) {
+                clearInterval(inv);
+                skip();
+            }
+            sec.innerHTML = '跳过广告' + time + "秒";
+            time -= 1;
+        }, 1000);
+    }
+    function skip(){
+    	api.openWin({
+    	    name: 'main',
+    	    url: '../main.html'
+    	});
+    }
+</script>
+</html>

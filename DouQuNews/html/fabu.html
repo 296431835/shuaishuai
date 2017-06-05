@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+  <title>title</title>
+  <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/cover.css" />
+  <style>
+    html,body{
+      /*background-color: transparent;*/
+      font-family: 微软雅黑;
+    }
+    .header{
+      height: 44px;
+      background-color: #d33d3c;
+      position: relative;
+    }
+    .header .left{
+      /*position: absolute;*/
+      /*background-color: #000;*/
+      width:44px;
+      height:44px;
+/*            top:0px;
+left:0px;*/
+background-image: url(../image/back.png);
+background-repeat: no-repeat;
+background-size: 25px 25px;
+background-position: center center;
+
+}
+.header .center{
+  position: absolute;
+  /*background-color:#000;*/
+  width: 88px;
+  height:44px;
+  top:0px;
+  left:50%;
+  margin-left: -44px;
+  text-align: center;
+  line-height: 44px;
+  color:#fff;
+  font-size: 15px;
+}
+.header .right{
+  position: absolute;
+  /*background-color:#000;*/
+  width: 44px;
+  height:44px;
+  line-height: 44px;
+  top:0px;
+  right:0px;
+  color:#fff;
+}
+
+
+.content3 {
+  box-sizing: border-box;
+  padding: 0 15px;
+}
+
+.section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 16px;
+  color: #444;
+  line-height: 20px;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.pic_ul {
+  display: flex;
+  display: -webkit-flex;
+  display: -webkit-box;
+  flex-flow: row;
+  -webkit-flex-flow: row;
+  -webkit-box-orient: horizontal;
+}
+
+.pic {
+  width: 32%;
+}
+
+.content3 .pic img {
+  width: 100%;
+  display: block;
+}
+
+.pic img {
+  width: 100%;
+  display: block;
+}
+
+.pic2 {
+  padding: 0 6px;
+  display: none;
+}
+.pic3{
+  display: none;
+}
+
+textarea {
+  display: block;
+  color: #888;
+  /*position: relative;*/
+  /*padding-bottom: 8px;*/
+  margin-top:10px;
+  margin-bottom: 20px;
+  font-size: 17px;
+  /*line-height: 17px;*/
+  height: 100px;
+  width: 100%;
+  resize: none;
+  box-sizing: border-box;
+  padding-top:7px;
+  padding-left:10px;
+}
+
+.title{
+  height: 40px;
+}
+
+.location  {
+  margin-top: 20px;
+  height: 100px;
+  border-right: 1px solid #e8e8e8;
+  background-size: 30px;
+  background-image: url(../image/fabu/loc_.png);
+  background-repeat: no-repeat;
+}
+
+.location  #loc_content{
+  height: 100%;
+  line-height: 30px;
+  text-indent: 2em;
+  
+}
+
+.location.success{
+  background-image: url(../image/fabu/loc.png);
+}
+
+
+</style>
+</head>
+<body  id="header">
+  <div class="header">
+    <div class="left" onclick="api.closeWin();" tapmode></div>
+    <div class="center">发表心情</div>    
+    <div class="right" onclick="fnCommit()">发表</div>
+  </div>
+
+  <div class="content3">
+    <div class="section">
+      <textarea name="" id="text" placeholder="写下心情。"></textarea>
+      <div class="pic_ul" id="pic_ul">
+        <div class="pic">
+          <img src="../image/ceshi/circle/add.png" onclick="fnAddImg(0)">
+        </div>
+        <div class="pic pic2">
+          <img src="../image/ceshi/circle/add.png" onclick="fnAddImg(1)">
+        </div>
+        <div class="pic pic3">
+          <img src="../image/ceshi/circle/add.png" onclick="fnAddImg(2)">
+        </div>
+      </div>
+      <div class="location" id="loc_div">
+      <span id="loc_content">定位中...</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/cover.js"></script>
+<script type="text/javascript">
+  apiready = function(){
+     $api.fixStatusBar( $api.byId('header'));
+     api.setStatusBarStyle({
+            style: 'dark',
+            color: '#d33d3c'
+     });
+    fnInit();
+    isLogined();
+  };
+  var zeroTime;
+  var id;
+  var pic_els;
+  var files=[];
+  var text_el;
+  var host;
+  var c_location;
+  function fnInit(){
+    zeroTime = $api.getStorage('zeroTime');
+    var pic_ul = $api.byId('pic_ul');
+    pic_els = $api.domAll(pic_ul, '.pic');
+    text_el = $api.byId('text');
+    host = $api.getStorage('host');
+    getLocation();
+    
+  }
+
+  function isLogined(index){
+   if(new Date().getTime()<=zeroTime){
+    id = $api.getStorage('id');
+  }else{
+    api.confirm({
+      title: '必须先登录',
+      msg: '去登录？',
+      buttons: ['确定', '取消']
+    }, function(ret, err){
+      if( 1==ret.buttonIndex ){
+        api.execScript({
+          name: 'main',
+          script: 'switchMainFrm(3);'
+        });
+
+        api.closeToWin({
+          name: 'main'
+        });
+      }else{
+       api.closeWin();
+     }
+   });
+
+  }
+}
+function fnAddImg(index){
+  api.actionSheet({
+    title: '选择',
+    cancelTitle: '取消',
+    buttons: ['相机','相册']
+  }, function(ret, err){
+    if( 1==ret.buttonIndex ){
+               //相机
+               api.getPicture({
+                 sourceType: 'camera',
+                 encodingType: 'jpg',
+                 mediaValue: 'pic',
+                 destinationType: 'url',
+                 quality: 50,
+                 saveToPhotoAlbum: false
+               }, function(ret, err){ 
+                if(ret){
+                  $api.attr($api.dom(pic_els[index], 'img'), 'src',ret.data);  
+                  $api.css(pic_els[index+1], 'display:block');   
+                  files[index]=ret.data;           
+                }
+              });
+             }else{
+              //相册
+              api.getPicture({
+                sourceType: 'album',
+                encodingType: 'jpg',
+                mediaValue: 'pic',
+                destinationType: 'url',
+                allowEdit: true,
+                quality: 50,
+                saveToPhotoAlbum: false
+              }, function(ret, err){ 
+                if(ret){     
+                  $api.attr($api.dom(pic_els[index], 'img'), 'src',ret.data);  
+                  $api.css(pic_els[index+1], 'display:block');
+                  files[index]=ret.data;                  
+                }
+             });
+            }
+          });
+}
+function fnCommit(){
+  var text = $api.val(text_el);
+  if(""==text&&0==files.length){
+     api.toast({
+         msg: '写点东西吧。。',
+         duration: 2000,
+         location: 'bottom'
+     });
+     return;
+  }
+  api.showProgress({
+      style: 'default',
+      animationType: 'fade',
+      title: '努力加载中...',
+      text: '先喝杯茶...',
+      modal: false
+  });
+
+
+
+  api.ajax({
+      url: host+'news/circle/add/',
+      method: 'post',
+      data: {
+          values: { 
+              id: id,
+              text:text,
+              loc_info: c_location
+          },
+          files: { 
+              file: files
+          }
+      }
+  },function(ret, err){
+      if (1==ret.status) {
+          api.hideProgress();
+          api.execScript({
+              name: 'main',
+              frameName: 'theme',
+              script: 'fnGetCircle();'
+          });
+          api.closeWin(); 
+
+      } else{
+
+      }
+  });
+}
+
+function getLocation() {
+  baiduLocation = api.require('baiduLocation');
+        baiduLocation.startLocation({
+            accuracy: '10m',
+            filter: 1,
+            autoStop: true
+        }, function(ret, err){
+            var loca = ret.latitude + ',' + ret.longitude;
+            if( ret.status ){
+                api.ajax({
+                    url: 'http://api.map.baidu.com/geocoder/v2/?ak=fpOoiYBRe31s2V89orNYV9dKqPz7am74&location=' + loca + '&output=json',
+                    method: 'GET',
+                }, function(ret, err) {
+                    if (ret) {
+                        sleep(2000);
+                        if (ret.status == 0)
+                        {
+                          c_location = ret.result.sematic_description;
+                          $api.addCls($api.byId('loc_div'), 'success');
+                          $api.byId('loc_content').innerHTML = c_location;
+                        } else {
+                          c_location = '-1';
+                          $api.byId('loc_content').innerHTML = '定位失败';
+                        }
+                    } else {
+                      alert('err');
+                        alert(JSON.stringify(err));
+                    }
+                });
+            }else{
+            }
+        });
+}
+function sleep(numberMillis) { 
+var now = new Date(); 
+var exitTime = now.getTime() + numberMillis; 
+while (true) { 
+now = new Date(); 
+if (now.getTime() > exitTime) 
+return; 
+} 
+}
+</script>
+</html>

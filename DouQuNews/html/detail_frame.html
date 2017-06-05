@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>headcontent</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/cover.css" />
+    <link rel="stylesheet" type="text/css" href="http://s2.pstatp.com/inapp/TTDefaultCSS.css">
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+            font-family: helvetica;
+        }
+
+        .toutiaoBar {
+            height: 40px;
+            background-color: #fff;
+        }
+
+        .toutiaoBar img {
+            margin: 0 15px;
+            display: block;
+            height: 40px;
+        }
+
+        .title {
+            margin: 0 15px;
+            padding: 10px 0;
+            display: block;
+        }
+
+        .title h1 {
+            display: block;
+            font-size: 21px;
+            font-weight: bolder;
+            color: #000;
+            margin: 0 0 5px;
+            line-height: 26px;
+            word-wrap: break-word;
+        }
+
+        .title .subtitle {
+            position: relative;
+            font-size: 11px;
+            color: #747474;
+        }
+
+        .subtitle>div {
+            display: inline-block;
+        }
+
+        .title .time {
+            padding-left: 6px;
+        }
+
+        .article {
+            margin: 0 15px;
+            line-height: 1.5em;
+            word-wrap: break-word;
+            text-align: justify;
+            overflow: hidden;
+            color: #303030;
+        }
+
+        .p {
+            word-wrap: break-word;
+            margin-top: 0;
+            text-align: justify;
+            margin-bottom: 14px;
+        }
+
+        .collect {
+            width: 90px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-radius: 23px;
+            line-height: 45px;
+            padding: 0 20px;
+        }
+
+        .collect-img {
+            width: 45px;
+            height: 45px;
+            display: inline-block;
+            float: left;
+            background: url('../image/detail/collect.png') center no-repeat;
+        }
+
+        .num {
+            display: inline-block;
+            float: left;
+            line-height: 45px;
+        }
+
+        .guanzhu {
+            font-size: 11px;
+            color: #747474;
+            height: 60px;
+            margin: 0 16px;
+        }
+
+        .section {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
+
+        .section .title {
+            font-size: 11px;
+            color: #747474;
+        }
+
+        .section .message {
+            font-size: 15px;
+            line-height: 45px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .message.last {
+            border-bottom: none;
+        }
+
+        .comment {
+            line-height: 46px;
+        }
+
+        .comment .tit {
+            width: 40px;
+            text-align: center;
+            border-bottom: 1px solid red;
+        }
+
+        .comment .comment_content {
+            text-align: center;
+            height: 100px;
+            line-height: 100px;
+            border: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+
+        .pic img {
+            width: 100%;
+        }
+
+        .content{
+            padding:10px 10px;
+        }
+        .content img{
+            width: 100%;
+
+        }
+        img {
+                display: block;
+                margin: 0 auto;
+                max-width: 350px;
+                border-radius: 4px;
+                background: #efefef;
+            }
+            p, article, article table {
+                color: #303030;
+            }
+    </style>
+</head>
+
+<body id="body">
+    <div id="detail_el"></div>
+</body>
+
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/cover.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        init();
+        getNewDetailById();
+    };
+    var id;
+    var host;
+    var detail_el;
+    function init(){
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '努力加载中...',
+            text: '请稍侯...',
+            modal: false
+        });
+
+        id= api.pageParam.id;
+        host = $api.getStorage('host');
+        detail_el = $api.byId('detail_el');
+    }
+
+    function getNewDetailById(){
+        url = host+"news/detail/"+id;
+
+        api.ajax({
+            url: url,
+            method: 'get'
+        },function(ret, err){
+        detail_el.innerHTML = ret.detail;
+        api.hideProgress();
+        });
+    }
+
+</script>
+
+</html>

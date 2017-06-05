@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/cover.css" />
+    <style>
+        body{
+            
+        }
+    </style>
+</head>
+<body>
+    
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/cover.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+    	init();
+        getPhotoBrowserById();
+    };
+    var id;
+    var host;
+    var photobrowser;
+    var photos = [];
+    var contents=[];
+    function init(){
+        id = api.pageParam.id;
+        host = $api.getStorage('host');
+    }
+
+    function getPhotoBrowserById(){
+        url = host+"news/pbrowser/"+id;
+        api.ajax({
+            url: url,
+            method: 'GET'
+        },function(ret, err){
+            for (var i = 0; i < ret.length; i++) {
+               photos.push(host+ret[i].image);
+               contents.push(ret[i].title);
+            }
+            initBrowser();
+
+        });
+
+    }
+
+
+    function initBrowser(){
+         photobrowser = api.require('photoBrowserTouTiao');
+         photobrowser.open(function(ret, err) {
+             if (ret.eventType == 'show') {
+                 photobrowser.setData({
+                     images: photos,
+                     texts: contents,
+                     comment: 520,
+                     favorite: false
+                 });
+             }
+             if(ret.eventType == 'back'){
+                api.closeWin();
+             }
+         });
+    }
+
+   
+</script>
+</html>

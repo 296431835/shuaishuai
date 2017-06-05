@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>Frame2</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/cover.css" />
+    <style>
+     html,
+     body {
+         height: 100%;
+     }
+
+     .content {
+         box-sizing: border-box;
+         padding: 0 15px;
+     }
+
+     .content .text {
+         width: 100%;
+         line-height: 20px;
+         font-size: 16px;
+         color: #444;
+         padding-top: 15px;
+         padding-bottom: 21px;
+         margin:-top:20px;
+     }
+
+     .content .text2 {
+         width: 100%;
+         height: 24px;
+         line-height: 22px;
+         font-size: 12px;
+         color: #888;
+         box-sizing: border-box;
+         /*padding-left: 23px;*/
+         background-size: 16px 16px;
+         background-repeat: no-repeat;
+         background-position: left center;
+         position: relative;
+     }
+     .content .text2 img{
+         width: 16px;
+         display: block;
+         float:left;
+         margin-top:3px;
+         margin-right:8px;
+     }
+
+     .content .arrow {
+         width: 44px;
+         height: 8px;
+         display: inline-block;
+         box-sizing: border-box;
+         padding-right: 6px;
+         background-image: url(../image/xia.png);
+         background-size: 8px 4px;
+         background-repeat: no-repeat;
+         background-position: center center;
+         position: absolute;
+         right: 0;
+         bottom: 8px;
+     }
+
+     .content .section1 {
+         width: 100%;
+         height: 114px;
+         position: relative;
+         box-sizing: border-box;
+         padding-right: 123px;
+         border-bottom: 1px solid #e8e8e8;
+
+     }
+
+     .content .section1 .from {
+         /*float: left;*/
+     }
+
+     .content .img {
+         position: absolute;
+         right: 3px;
+         top: 10px;
+     }
+
+     .content .img img {
+         width: 120px;
+     }
+
+
+
+     .content2,
+     .content3 {
+         box-sizing: border-box;
+         padding: 0 15px;
+     }
+
+     .content2 .section,
+     .content3 .section {
+         width: 100%;
+         box-sizing: border-box;
+         border-bottom: 1px solid #e8e8e8;
+     }
+
+     .content2 .title,
+     .content3 .title {
+         font-size: 16px;
+         color: #444;
+         line-height: 20px;
+         padding-top: 1rem;
+         padding-bottom: 0.5rem;
+     }
+
+     .content2 .pic_ul {
+         display: flex;
+         display: -webkit-flex;
+         display: -webkit-box;
+         flex-flow: row;
+         -webkit-flex-flow: row;
+         -webkit-box-orient: horizontal;
+     }
+
+     .content2 .pic {
+         flex: 1;
+         -webkit-flex: 1;
+         -webkit-box-flex: 1;
+         box-sizing: border-box;
+         width: 33%;
+         margin-right: 3px;
+     }
+
+     .content2 .pic img,
+     .content3 .pic img {
+         width: 100%;
+         display: block;
+         margin: 0 auto;
+     }
+
+     .content2 .text,
+     .content3 .text {
+         color: #888;
+         font-size: 12px;
+         position: relative;
+         padding-left: 22px;
+         padding-bottom: 8px;
+         line-height: 38px;
+     }
+
+     .content2 .icon,
+     .content3 .icon {
+         position: absolute;
+         top: 0;
+         left: 0;
+     }
+
+     .content .icon img,
+
+     .content2 .icon img,
+     .content3 .icon img {
+         width: 50%;
+         margin-top: 11px;
+     }
+
+     .content2 .arrow,
+     .content3 .arrow {
+         position: absolute;
+         bottom: 8px;
+         right: 0px;
+         width: 38px;
+         height: 38px;
+         box-sizing: border-box;
+         background-image: url(../image/xia.png);
+         background-size: 8px 4px;
+         background-repeat: no-repeat;
+         background-position: center center;
+     }
+
+     em {
+         padding-right: 4px;
+     }
+     .add{
+         width:260px;
+     }
+    </style>
+</head>
+<body>
+  <div id="newslist">
+  </div>
+</body>
+	<script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/cover.js"></script>
+    <script type="text/javascript" src="../script/template-native.js"></script>
+    <script id="news_template" type="text/html">
+        <% for(i in ret){ %>
+            <% if (ret[i].type_en == 'redian'){ %>
+                <div class="content" onclick="showDetail(<%= ret[i].id%>,'<%=ret[i].type_en%>')">
+                   <div class="section1">
+                    <div class="from">
+                     <div class="text"><%= ret[i].title%></div>
+                     <div class="add">
+                      <div class="text2">
+                       <img src="<%=host+ret[i].company_path%>">
+                       <em><%=ret[i].company_name%></em>
+                       <em><%=getTime(ret[i].time)%></em>
+                       <div class="arrow"></div>
+                  </div>
+                </div>
+                </div>
+                <div class="img">
+                     <img src="<%= host+ret[i].image0%>"></div>
+                     <div class="pic"></div>
+                </div>
+                </div>
+            <% } else if(ret[i].type_en == 'taiyuan') {%>
+                <div class="content2" onclick="showDetail(<%= ret[i].id%>,'<%=ret[i].type_en%>')">
+                    <div class="section">
+                     <div class="title"><%= ret[i].title%></div>
+                     <div class="pic_ul">
+                      <div class="pic">
+                       <img src="<%= host+ret[i].image0%>">
+                  </div>
+                  <div class="pic pic7">
+                       <img src="<%= host+ret[i].image1%>">
+                  </div>
+                  <div class="pic">
+                       <img src="<%= host+ret[i].image2%>">
+                  </div>
+                </div>
+                <div class="text">
+                 <div class="icon">
+                  <img src="<%=host+ret[i].company_path%>"></div>
+                  <div>
+                   <em><%=ret[i].company_name%></em>
+                   <em><%=getTime(ret[i].time)%></em>
+                </div>
+                <div class="arrow"></div>
+                </div>
+                </div>
+                </div>
+            <% } else if(ret[i].type_en == 'shehui') {%>
+                <div class="content3" onclick="showDetail(<%= ret[i].id%>,'<%=ret[i].type_en%>')">
+                     <div class="section">
+                      <div class="title"><%= ret[i].title%></div>
+                      <div class="pic">
+                       <img src="<%= host+ret[i].image0%>">
+                  </div>
+                  <div class="text">
+                       <div class="icon">
+                        <img src="<%=host+ret[i].company_path%>"></div>
+                        <div>
+                         <em><%=ret[i].company_name%></em>
+                         <em><%=getTime(ret[i].time)%></em>
+                    </div>
+                    <div class="arrow"></div>
+                </div>
+                </div>
+                </div>
+            <% } %>
+        <% } %>
+    </script>
+	<script type="text/javascript">
+		apiready = function(){
+            init();
+            initNewsView();
+            pullRefresh();
+		}
+        var host;
+        var type;
+        var newslist;
+        function init() {
+            api.showProgress({
+                     style: 'default',
+                     animationType: 'fade',
+                     title: '拼命加载中...',
+                     text: '请稍后...',
+                     modal: false
+                 });
+            host = $api.getStorage('host');
+            type = api.pageParam.type;
+            newslist = $api.byId('newslist');
+        }
+
+        function initNewsView() {
+            var url;
+            if (type == 'redian')
+                url = host + 'news/list/redian';
+            else if (type == 'taiyuan')
+                url = host + 'news/list/taiyuan';
+            else if (type == 'shehui')
+                url = host + 'news/list/shehui';
+            else url = host + 'news/list/';
+
+            api.ajax({
+                url: url,
+                method: 'GET',
+            }, function(ret, err) {
+                if (ret) {
+                    data = {'ret':ret, 'host':host, 'getTime':getTime};
+                    html = template('news_template', data);
+                    newslist.innerHTML = html;
+                    api.refreshHeaderLoadDone();
+                    api.hideProgress();
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+
+        //下拉刷新
+           function pullRefresh(){
+              api.setRefreshHeaderInfo({
+                  visible: true,
+                  loadingImg: 'widget://image/refresh.png',
+                  bgColor: '#ccc',
+                  textColor: '#fff',
+                  textDown: '下拉刷新...',
+                  textUp: '松开刷新...',
+                  showTime: true
+              }, function(ret, err) {
+                  initNewsView();
+              });
+           }
+
+        function showDetail(id, type_en) {
+            if (type_en == 'shehui')
+                openPhotoBrowser(id);
+            else openDetailWin(id);
+        }
+
+        function openDetailWin(id) {
+            api.openWin({
+                name: 'win_newsdetail',
+                url: 'detail.html',
+                pageParam: {
+                    id: id
+                }
+            });
+        }
+
+        function openPhotoBrowser(id) {
+            api.openWin({
+                name: 'photobrowser',
+                url: 'photobrowser.html',
+                pageParam: {
+                    id: id
+                }
+            });
+        }
+        function getTime(time){
+             cha = new Date().getTime() - time;
+             if(cha>=24*3600*1000){
+               str = parseInt(cha/(24*3600*1000))+'天前';
+             }else if(cha>=3600*1000){
+               str = parseInt(cha/(3600*1000))+'小时前';
+             }else if(cha>=60*1000){
+               str = parseInt(cha/(60*1000))+'分钟前';
+             }else{
+               str = parseInt(cha/1000)+'秒前';
+             }
+             return str;
+           }
+	</script>
+</html>

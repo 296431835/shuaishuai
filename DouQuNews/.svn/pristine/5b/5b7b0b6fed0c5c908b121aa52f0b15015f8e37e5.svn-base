@@ -1,0 +1,201 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>ad</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/cover.css" />
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        .content .section {
+            width: 100%;
+            box-sizing: border-box;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .content .pic{
+            position: relative;
+        }
+        .content .pic img {
+            width: 100%;
+            display: block;
+            margin: 0 auto;
+
+        }
+        .content .pic .title{
+            position: absolute;
+            top:12px;
+            left:13px;
+            color: #fff;
+        }
+
+        .content .footer {
+            color: #888;
+            font-size: 12px;
+            position: relative;
+            padding-left: 45px;
+            padding-right: 54px;
+            height: 40px;
+            line-height: 40px;
+            box-sizing: border-box;
+        }
+
+        .content .icon {
+            width: 24px;
+            height: 24px;
+            position: absolute;
+            top: 8px;
+            left: 15px;
+        }
+
+        .content .icon img {
+            width: 24px;
+        }
+
+        .content .txt {
+            width: 100%;
+            color: #222;
+            font-size: 12px;
+        }
+
+        .content .txt em {
+            float: right;
+            color: #a7a7a7;
+        }
+
+        .content .txt .zan {
+            width: 36px;
+            margin-left: 17px;
+            text-align: right;
+            font-size: 10px;
+            color: #9e9e9e;
+            background-image: url(../image/video/icn1.png);
+            background-size: 18px 16px;
+            background-repeat: no-repeat;
+            background-position: left center;
+        }
+
+        .content .arrow {
+            position: absolute;
+            bottom: 0px;
+            right: 10px;
+            width: 31px;
+            height: 40px;
+            box-sizing: border-box;
+            background-image: url(../image/video/icn2.png);
+            background-size: 17px 3px;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        .kye {
+            height: 10px;
+            width: 100%;
+            background-color: #f4f5f6;
+            border-bottom: 1px solid #e8e8e8;
+        }
+    </style>
+</head>
+
+<body id="body">
+<div id="video_list"></div>
+</body>
+<script id='video_template' type="text/html">
+    <% for(i in ret){%>
+     <div class="content" onclick="videoStart(<%=i%>)">
+        <div class="section">
+            <div class="pic">
+                <img src="<%=host+ret[i].image%>">
+                <div class="title"><%= ret[i].title%></div>
+            </div>
+            <div class="footer">
+                <div class="icon">
+                    <img src="<%=host+ret[i].company_path%>" alt="">
+                </div>
+                <div class="txt"><%= ret[i].company_name%> <em class="zan">40</em><em>22万次播放</em></div>
+                <div class="arrow"></div>
+            </div>
+        </div>
+        <div class="kye"></div>
+    </div>
+    <%}%>
+</script>
+<script src="../script/template-native.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/cover.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        init();
+        getVideo();
+        pullRefresh();
+    };
+    var host;
+    var videoPlayer;
+    var video_list;
+    var titles=[];
+    var videos=[];
+    function init(){
+        host = $api.getStorage('host');
+        videoPlayer = api.require('videoPlayer');
+        video_list = $api.byId('video_list');
+
+    }
+
+    function pullRefresh() {
+        api.setRefreshHeaderInfo({
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#ccc',
+            textColor: '#fff',
+            textDown: '下拉刷新...',
+            textUp: '松开刷新...'
+        }, function(ret, err) {
+            getVideo();
+        });
+    }
+    function getVideo(){
+        url = host+"news/videos/"
+        api.ajax({
+            url: url,
+            method: 'GET'
+        },function(ret, err){
+            data = {'ret':ret,'host':host};
+            html = template('video_template',data);
+            video_list.innerHTML = html;
+
+            for (var i = 0; i < ret.length; i++) {
+                titles.push(ret[i].title);
+                videos.push(host+ret[i].path);
+            }
+            api.refreshHeaderLoadDone();
+        });
+    }
+
+    function videoStart(index){
+        videoPlayer.play({
+            texts: {
+                head: {
+                    title: titles[index]
+                }
+            },
+            path: videos[index], //（可选项）字符串类型；文档的路径，支持网络和本地（fs://）路径；默认：未传值时不播放
+            //在 android 平台上不支持 widget://
+            autoPlay: true //（可选项）布尔类型；打开时是否自动播放；默认：true（自动播放）
+        }, function(ret, err) {
+            // if (ret) {
+            //     alert(JSON.stringify(ret));
+            // } else {
+            //     alert(JSON.stringify(err));
+            // }
+        });
+    }
+
+
+</script>
+</html>

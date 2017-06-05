@@ -1,0 +1,400 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./css/cover.css" />
+    <style type="text/css">
+    
+        body {
+            display: -webkit-flex;
+            -webkit-flex-flow: column;
+
+            display: -webkit-box;
+            -webkit-box-orient:vertical;
+        }
+
+        #header {
+            display: -webkit-flex;
+            display: -webkit-box;
+            text-align: center;
+            line-height: 44px;
+            height: 44px;
+            background-color: #d33d3c;
+            overflow: hidden;
+        }
+
+        /* #header ul li {
+            display: none;
+        }
+        #header ul li.active {
+            display: block;
+        } */
+
+        #header .topgroup .menu{
+            -webkit-flex:1;
+            -webkit-box-flex:1;
+
+            text-align: center;
+            font-size: 17px;
+            color:#fff;
+        }
+
+        #header .topgroup #fabu{
+            width: 44px;
+            background-size: 25px 25px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url(image/camera.png);
+        }
+        #header .topgroup #cam.active {
+            background-image: url(image/camera2.png);
+        }
+
+        #header .topgroup .menu.active{
+            font-weight: bold;
+            color: #444;
+        }
+
+       #header .topgroup{
+           display: none;
+       }
+       #header .topgroup.active{
+           display: -webkit-flex;
+           display: -webkit-box;
+           height: 44px;
+           line-height: 44px;
+           width: 100%;
+       }
+        #content {
+            display: -webkit-flex;
+            display: -webkit-box;
+            -webkit-flex:1;
+            -webkit-box-flex:1;
+        }
+
+        #footer {
+            height: 44px;
+            background-color: #F3F5F4;
+            display: -webkit-flex;
+            display: -webkit-box;
+        }
+
+        #footer .menu{
+            -webkit-flex:1;
+            -webkit-box-flex:1;
+            text-align: center;
+            background-position: 50% 8px;
+            background-size: 20px 20px;
+            background-repeat: no-repeat;
+            padding-top: 25px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        #footer .menu:nth-child(1) { background-image: url(image/footer/home.png); }
+        #footer .menu:nth-child(2) { background-image: url(image/footer/video.png); }
+        #footer .menu:nth-child(3) { background-image: url(image/footer/theme.png); }
+        #footer .menu:nth-child(4) { background-image: url(image/footer/my.png); }
+
+        #footer .menu.active:nth-child(1) { background-image: url(image/footer/home_act.png); }
+        #footer .menu.active:nth-child(2) { background-image: url(image/footer/video_act.png); }
+        #footer .menu.active:nth-child(3) { background-image: url(image/footer/theme_act.png); }
+        #footer .menu.active:nth-child(4) { background-image: url(image/footer/my_act.png); }
+        #footer .menu span {
+            padding: 0;
+            text-align: center;
+            width: 18px;
+            font-size: 12px;
+            height: 18px;
+            line-height: 18px;
+            border-radius: 18px;
+            background-color: #f00;
+            position: fixed;
+            bottom: 24px;
+            margin-left: -14px;
+            color: #fff;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+	
+    <div id="header">
+        <div class="topgroup active">
+            <div class="menu active" onclick="switchHeaderFrame(0);">推荐</div>
+            <div class="menu" onclick="switchHeaderFrame(1);">热点</div>
+            <div class="menu" onclick="switchHeaderFrame(2);">太原</div>
+            <div class="menu" onclick="switchHeaderFrame(3);">社会</div>
+            <div class="menu" onclick="switchHeaderFrame(4);">订阅</div>
+        </div>
+        <div class="topgroup">
+            <div class="menu">视频</div>
+        </div>
+        <div class="topgroup">
+            <div class="menu">朋友圈
+            </div>
+             <div id="fabu" onclick="fnFabu();"></div>
+        </div>
+        <div class="topgroup">
+            <div class="menu">我的</div>
+        </div>
+    </div>
+    <div id="content"></div>
+    <div id="footer">
+        <div class="menu active" onclick="switchFrame(0);">主页</div>
+        <div class="menu" onclick="switchFrame(1);">视频</div>
+        <div class="menu" onclick="switchFrame(2);">朋友圈<span id="msg">2</span></div>
+        <div class="menu" onclick="switchFrame(3);">我的</div>
+    </div>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/cover.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        api.setFullScreen({
+            fullScreen: false
+        });
+        $api.fixStatusBar( $api.dom('#header') );
+        api.setStatusBarStyle({
+            style: 'dark',
+            /*color: '#6ab494'*/
+        });
+        addListener();
+        switchMainFrm(0);
+        getRecentCount();
+        initRecent();
+	};
+
+    var recent_count = $api.getStorage('recent_count');
+    if (recent_count === undefined)
+        recent_count = 0;
+    function addListener(){
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err){
+            api.toLauncher();
+        });
+     }
+    function initFrmGroup() {
+        frms = [{
+                name: 'home_frame_0',
+                url: 'html/frame_home.html',
+                pageParam:{'type':'tuijian'},
+            },{
+                name: 'home_frame_1',
+                url: 'html/frame_home.html',
+                pageParam:{'type':'redian'},
+            },{
+                name: 'home_frame_2',
+                url: 'html/frame_home.html',
+                pageParam:{'type':'taiyuan'},
+            },{
+                name: 'home_frame_3',
+                url: 'html/frame_home.html',
+                pageParam:{'type':'shehui'},
+            },{
+                name: 'home_frame_4',
+                url: 'html/frame_home.html',
+                pageParam:{'type':'dinyue'},
+            }];
+
+
+        api.openFrameGroup({
+            name: 'home_group',
+            scrollEnabled: true,
+            preload:5,
+            rect: {
+                 x: 0,
+                 y: $api.byId('header').offsetHeight,
+                 w: 'auto',
+                 h: $api.byId('content').offsetHeight
+            },
+            frames: frms
+        }, function(ret, err) {
+            if (ret) {
+                for (var i = 0; i < 5; i++) {
+                    var eHomeFrmList = $api.domAll('#header .topgroup .menu');
+                    if(i==ret.index){
+                        $api.addCls(eHomeFrmList[i], 'active');
+                    }else{
+                        $api.removeCls(eHomeFrmList[i], 'active');
+                    }
+                }
+            } else {
+                // alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function switchFrame(flag) {
+        var eHeaderList = $api.domAll('#header .topgroup');
+        var eFooterList = $api.domAll('#footer .menu');
+        var index = 0;
+        for (var i = 0; i < eHeaderList.length; i++) {
+            if (flag == i) {
+                index = i;
+            } else {
+                $api.removeCls(eHeaderList[i], 'active');
+                $api.removeCls(eFooterList[i], 'active');
+            }
+        }
+        $api.addCls(eHeaderList[index], 'active');
+        $api.addCls(eFooterList[index], 'active');
+        switchMainFrm(index);
+    }
+
+    function switchMainFrm(index) {
+        hiddenOtherFrms(index);
+        switch(index){
+            case 0:
+                initFrmGroup();
+                break;
+            case 1:
+                api.openFrame({
+                    name: 'video',
+                    url: 'html/frame_video.html',
+                    rect: {
+                        x: 0,
+                        y: $api.byId('header').offsetHeight,
+                        w: 'auto',
+                        h: $api.byId('content').offsetHeight
+                    },
+                    pageParam: {
+                        name: 'value'
+                    },
+                    bounces: true,
+                    reload: true
+                });
+                break;
+            case 2:
+                api.openFrame({
+                    name: 'theme',
+                    url: 'html/frame_circle.html',
+                    rect: {
+                        x: 0,
+                        y: $api.byId('header').offsetHeight,
+                        w: 'auto',
+                        h: $api.byId('content').offsetHeight
+                    },
+                    pageParam: {
+                        name: 'value'
+                    },
+                    bounces: true,
+                    reload: true
+                });
+                break;
+            case 3:
+                api.openFrame({
+                    name: 'my',
+                    url: 'html/frame_my.html',
+                    rect: {
+                        x: 0,
+                        y: $api.byId('header').offsetHeight,
+                        w: 'auto',
+                        h: $api.byId('content').offsetHeight
+                    },
+                    pageParam: {
+                        name: 'value'
+                    },
+                    bounces: true
+                });
+                break;
+            default:
+                break;
+        }
+    }
+
+    function switchHeaderFrame(flag) {
+        var eHomeFrmList = $api.domAll('#header .topgroup .menu');
+        var index = 0;
+        for (var i = 0; i < 5; i++) {
+            if (i == flag) {
+                var index = i;
+            } else {
+                $api.removeCls(eHomeFrmList[i], 'active');
+            }
+        }
+        $api.addCls(eHomeFrmList[index], 'active');
+        api.setFrameGroupIndex({
+            name: 'home_group',
+            index: index,
+            scroll: false,
+            reload: true
+        });
+    }
+
+    function hiddenOtherFrms(goal) {
+        var frmNames = ['home_group', 'video', 'theme', 'my'];
+        for (var i = 0; i < frmNames.length; i++) {
+            if (i != goal)
+            {
+                if (frmNames[i] == 'home_group') {
+                    api.setFrameGroupAttr({
+                        name:frmNames[i],
+                        hidden: true
+                    });
+                } else {
+                    api.setFrameAttr({
+                        name:frmNames[i],
+                        hidden: true
+                    });
+                }
+            }
+        }
+    }
+
+    function fnFabu(){
+        api.openWin({
+            name: 'fabu',
+            url: 'html/fabu.html'
+        });
+    }
+
+    function getRecentCount() {
+        var eMsg = $api.byId('msg');
+        var host = $api.getStorage('host');
+        api.ajax({
+            url: host + 'news/circle/recent/' + $api.getStorage('refresh_time'),
+            method: 'GET'
+        }, function(ret, err) {
+            if (ret) {
+				if (ret.count > recent_count)
+					{
+					//播放提示音
+					   api.startPlay({
+                           path: 'widget://sound/msg.wav'
+                       }, function(ret, err) {
+                           if (ret) {
+                               // alert(JSON.stringify(ret));
+                           } else {
+                               // alert(JSON.stringify(err));
+                           }
+                       });
+					}
+                recent_count = ret.count;
+                $api.setStorage('recent_count', recent_count);
+                if (recent_count > 0) {
+                    eMsg.style.display = 'inline';
+                    if (recent_count <= 99) 
+                        eMsg.innerText = recent_count;
+                    else eMsg.innerText = '99+';
+                    
+                } else {
+                    eMsg.style.display = 'none';
+                }
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function initRecent(){
+        setInterval(getRecentCount, 5000);
+    }
+</script>
+</html>

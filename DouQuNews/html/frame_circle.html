@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>title</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../css/cover.css" />
+           <style>
+               html,
+               body {
+                   height: 100%;
+               }
+               .content1,
+               .content2{
+                   box-sizing: border-box;
+                   padding: 0 15px;
+               }
+        /*       
+               .section {
+                   width: 100%;
+                   box-sizing: border-box;
+               }
+               */
+               .title {
+                   font-size: 16px;
+                   color: #444;
+                   line-height: 20px;
+                   padding-top: 1rem;
+                   padding-bottom: 0.5rem;
+               }
+               
+               .pic_ul {
+                   display: flex;
+                   display: -webkit-flex;
+                   display: -webkit-box;
+                   flex-flow: row;
+                   -webkit-flex-flow: row;
+                   -webkit-box-orient: horizontal;
+               }
+               
+              .content1 .pic {
+                 width: 30vw;
+                 height:30vw;
+                 /*margin-right: 5px;*/
+                 background-size: cover;
+                 background-position: center center;
+                 background-image: url(../image/ceshi/circle/pic1.png);
+                 /*background: #000;*/
+               }
+           
+               
+               .content2 .pic {
+                   flex: 1;
+                   -webkit-flex: 1;
+                   -webkit-box-flex: 1;
+                   box-sizing: border-box;
+
+               }
+               
+               .content2 .pic img {
+                   width: 50%;
+                   display: block;
+               }
+               
+
+               .pic img {
+                   width: 100%;
+                   display: block;
+               }
+               
+               .pic7 {
+                   margin: 0 6px;
+               }
+               
+               .text {
+                   color: #888;
+                   font-size: 12px;
+                   position: relative;
+                   padding-bottom: 8px;
+                   line-height: 38px;
+               }
+               
+          /*     .icon {
+                   position: absolute;
+                   top: 0px;
+                   right: 6px;
+                   width: 37px;
+                   height: 38px;
+                   text-align: right;
+                   box-sizing: border-box;
+                   background-image: url(../image/ceshi/circle/icn2.png);
+                   background-size: 18px 16px;
+                   background-repeat: no-repeat;
+                   background-position: left center;
+               }*/
+               
+               .zan {
+                   
+                   position: absolute;
+                   top: 0px;
+                   right: 6px;
+                   width: 37px;
+                   height: 38px;
+                   text-align: right;
+                   box-sizing: border-box;
+                   background-image: url(../image/ceshi/circle/icn1.png);
+                   background-size: 18px 16px;
+                   background-repeat: no-repeat;
+                   background-position: left center;
+               }
+               
+               .arrow {
+                   position: absolute;
+                   top: 0px;
+                   right: 6px;
+                   width: 37px;
+                   height: 38px;
+                   text-align: right;
+                   box-sizing: border-box;
+                   background-image: url(../image/ceshi/circle/icn2.png);
+                   background-size: 18px 16px;
+                   background-repeat: no-repeat;
+                   background-position: left center;
+               }
+               .delete {
+                   position: absolute;
+                   top: 0px;
+                   right: 62px;
+                   width: 32px;
+                   height: 38px;
+                   text-align: right;
+                   box-sizing: border-box;
+               }
+               .title em {
+                   color: #406599;
+               }
+
+               .location  {
+                margin-left: -5px;
+                 margin-top: -15px;
+                 height: 100px;
+                 background-size: 20px;
+                 background-image: url(../image/fabu/loc.png);
+                 background-repeat: no-repeat;
+               }
+
+               .location  #loc_content{
+                margin-left: 23px;
+                  color: #888;
+                  font-size: 12px;
+                  height: 100%;
+                  line-height: 20px;
+               }
+           </style>
+    </head>
+
+    <body>
+      <div id="body"></div>
+    </body>
+    <script id="circle_template" type="text/html">
+    <% for(i in ret){ %>
+        <% if(ret[i].image1){ %>
+          <div class="content1">
+              <div class="section">
+                  <div class="title"><%= ret[i].content%></div>
+                  <div class="pic_ul">
+                      <div class="pic" style="background-image:url(<%= host+ret[i].image0%>)"></div>
+                      <div class="pic pic7" style="background-image:url(<%= host+ret[i].image1%>)"></div>
+                      <div class="pic" style="background-image:url(<%= host+ret[i].image2%>)"></div>
+                  </div>
+                  <div class="text">
+                      <div><%= ret[i].name%> <%= getTime(ret[i].time)%></div>
+                      <%if(ret[i].userid == uid){%>
+                        <div class="delete" onclick=delCircle(<%=ret[i].circle_id%>);>删除</div>
+                      <%}%>
+                      <div class="zan">12</div>
+                  </div>
+                  <div class="location" id="loc_div">
+                    <span id="loc_content"><%= ret[i].loc%></span>
+                  </div>
+              </div>
+          </div>
+        <%}else{%>
+          <div class="content2">
+              <div class="section">
+                  <div class="title"><%= ret[i].content%></div>
+                  <div class="pic_ul">
+                      <div class="pic">
+                          <img src="<%= host+ret[i].image0%>" alt="">
+                      </div>
+                  </div>
+                  <div class="text">
+                      <div><%= ret[i].name%>  <%= getTime(ret[i].time)%></div>
+                      <%if(ret[i].userid == uid){%>
+                        <div class="delete" onclick=delCircle(<%=ret[i].circle_id%>);>删除</div>
+                      <%}%>
+                      <div class="zan">16</div>
+                  </div>
+                  <div class="location" id="loc_div">
+                    <span id="loc_content"><%= ret[i].loc%></span>
+                  </div>
+              </div>
+          </div>
+        <%}%>
+    <%}%>
+    </script>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/template-native.js"></script>
+    <script type="text/javascript" src="../script/cover.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            fnInit();
+            fnGetCircle();
+            fnPullRefresh();
+        };
+        var host;
+        var body_el;
+        function fnInit(){
+            api.showProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '请稍侯...',
+                modal: false
+            });
+            host = $api.getStorage('host');
+            body_el = $api.byId('body');
+
+        }
+        function fnGetCircle(){
+            api.ajax({
+                url: host+'news/circle/list/',
+                method: 'get'
+            },function(ret, err){
+                if (ret) {
+                  api.execScript({
+                      name: 'main',
+                      script: 'getRecentCount();'
+                  });
+                    $api.setStorage('refresh_time', ret.refresh_time);
+                    $api.setStorage('recent_count', 0);
+                    data = {'ret':ret.data,'host':host,'getTime':getTime,'window':window, 'uid':$api.getStorage('id')};
+                    html = template('circle_template',data);
+                    body_el.innerHTML = html;
+
+                    api.hideProgress();
+                    api.refreshHeaderLoadDone();
+                }
+            });
+        }
+
+        function fnPullRefresh(){
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#ccc',
+                textColor: '#fff',
+                textDown: '下拉刷新...',
+                textUp: '松开刷新...',
+                showTime: true
+            }, function(ret, err){
+                fnGetCircle();
+            });
+        }
+
+        function delCircle(circle_id) {
+          api.confirm({
+              title: '警告',
+              msg: '确认删除此动态？',
+              buttons: ['取消', '确定']
+          }, function(ret, err) {
+              if (ret) {
+                  if (ret.buttonIndex == 2)
+                  {
+                    api.ajax({
+                        url: host + 'news/circle/delete/' + circle_id,
+                        method: 'GET'
+                    }, function(ret, err) {
+                        if (ret) {
+                          alert('删除成功！');
+                            fnGetCircle();
+                        } else {
+                            alert(JSON.stringify(err));
+                        }
+                    });
+                  }
+              } else {
+                  alert(JSON.stringify(err));
+              }
+          });
+        }
+        function getTime(time){
+          cha = new Date().getTime() - time;
+          if(cha>=24*3600*1000){
+            str = parseInt(cha/(24*3600*1000))+'天前';
+          }else if(cha>=3600*1000){
+            str = parseInt(cha/(3600*1000))+'小时前';
+          }else if(cha>=60*1000){
+            str = parseInt(cha/(60*1000))+'分钟前';
+          }else{
+            str = parseInt(cha/1000)+'秒前';
+          }
+          return str;
+        }
+    </script>
+
+</html>

@@ -1,0 +1,12 @@
+.cover{
+        position:fixed;
+        top: 0px;
+        left: 0px;
+        outline:5000px solid rgba(189, 205, 99, 0.4);
+        z-index: 99999;
+        display: none;
+    }
+
+.cover.active{
+        display: block;
+}

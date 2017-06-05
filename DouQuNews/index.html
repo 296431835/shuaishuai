@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+<body>
+
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        var mode = $api.getStorage('mode');
+        if (mode != 'huyan' && mode != 'common')
+            $api.setStorage('mode', 'common');
+        //$api.setStorage('host','http://121.42.205.89:8000/');
+        $api.setStorage('host','http://10.42.0.1:8000/');
+        var refresh_time = $api.getStorage('refresh_time');
+        if (refresh_time === undefined)
+            $api.setStorage('refresh_time', '0');
+        api.openWin({
+            name: 'ad',
+            url: 'html/ad.html',
+            bgColor:'image/ad.png'
+        });
+
+    };
+</script>
+</html>
